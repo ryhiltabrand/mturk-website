@@ -13,7 +13,7 @@ class AddHit extends Component {
 
     CreateHit(title, desc, assignments, lifetime, duration, reward, fileName){
 
-        var xml = `<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+        var xml = `<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
             <HTMLContent><![CDATA[
                 <!DOCTYPE html>
             <html>
@@ -25,7 +25,7 @@ class AddHit extends Component {
                 <form name='mturk_form' method='post' id='mturk_form' action='https://www.mturk.com/mturk/externalSubmit'>
                 <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
                 <h1>Example Question</h1>
-                <img src="https://figures-odu-examples-6-27-2021.s3.amazonaws.com/2007.sigdial-1.44.pdf-Figure2.png" alt="alternatetext"> 
+                <img src="https://figures-odu-examples-6-27-2021.s3.amazonaws.com/${fileName}" alt="alternatetext"> 
                 
                 <fieldset id= "div1" required>
                 <label for= 'question1'> 1. Is this current content component a scientific figure or a table?</label><br>
@@ -90,7 +90,7 @@ class AddHit extends Component {
             ]]>
             </HTMLContent>
                 <FrameHeight>450</FrameHeight>
-            </HTMLQuestion>`
+            </ExternalQuestion>`
     
         AWS.config.update({
             accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,

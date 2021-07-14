@@ -26,7 +26,7 @@ function CreateHit(arr, assignments, lifetime, duration, reward){
         var desc =`Please check the figure(${title}) and answer the following questions`;
         console.log(desc);
         
-        var xml = `<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+        var xml = `<HTMLQuestion  xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
             <HTMLContent><![CDATA[
                 <!DOCTYPE html>
             <html>
@@ -35,7 +35,7 @@ function CreateHit(arr, assignments, lifetime, duration, reward){
                 <script type='text/javascript' src='https://s3.amazonaws.com/mturk-public/externalHIT_v1.js'></script>
             </head>
             <body>
-                <form name='mturk_form' method='post' id='mturk_form' action='https://www.mturk.com/mturk/externalSubmit'>
+                <form name='mturk_form' method='post' id='mturk_form' action='https://workersandbox.mturk.com/mturk/externalSubmit'>
                 <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
                 <h1>Example Question</h1>
                 <img src="https://figures-odu-examples-6-27-2021.s3.amazonaws.com/${path}" alt="alternatetext"> 
@@ -103,7 +103,7 @@ function CreateHit(arr, assignments, lifetime, duration, reward){
             ]]>
             </HTMLContent>
                 <FrameHeight>450</FrameHeight>
-            </HTMLQuestion>`
+            </HTMLQuestion >`
 
 
         if(title === undefined || desc === undefined || assignments === undefined || lifetime === undefined || duration === undefined || reward === undefined) {

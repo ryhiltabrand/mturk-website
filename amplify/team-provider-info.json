@@ -10,6 +10,13 @@
       "StackName": "amplify-amplify5ca503656cdd4-staging-172913",
       "StackId": "arn:aws:cloudformation:us-east-1:542773437311:stack/amplify-amplify5ca503656cdd4-staging-172913/03c88c40-e012-11eb-b22e-0e8b433be3dd",
       "AmplifyAppId": "d2y2uhz212u68c"
+    },
+    "categories": {
+      "auth": {
+        "newAuth": {},
+        "userPoolGroups": {},
+        "mturkwebsite": {}
+      }
     }
   }
 }

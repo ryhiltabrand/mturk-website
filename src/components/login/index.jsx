@@ -1,3 +1,3 @@
 import "./style.css"
-export {Login} from "./login"
+export {Logins} from "./login"
 export {Register} from "./register"
