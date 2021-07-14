@@ -102,7 +102,7 @@ function CreateHit(arr, assignments, lifetime, duration, reward){
             </html>
             ]]>
             </HTMLContent>
-                <FrameHeight>450</FrameHeight>
+                <FrameHeight>750</FrameHeight>
             </HTMLQuestion >`
 
 

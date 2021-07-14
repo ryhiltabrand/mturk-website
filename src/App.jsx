@@ -51,11 +51,10 @@ const Navigation = () => (
     <ul>
       <li><NavLink exact activeClassName="current" to='/'>Home</NavLink></li>
       <li><NavLink exact activeClassName="current" to='/Hits'>Hits</NavLink></li>
-      <li><NavLink exact activeClassName="current" to='/LogIn'>LogIn</NavLink></li>
-      <li><NavLink exact activeClassName="current" to='/secret'>secret</NavLink></li>
       <li><NavLink exact activeClassName="current" to='/HitAdder'>Add Hit</NavLink></li>
       <li><NavLink exact activeClassName="current" to='/Balance'>Balance</NavLink></li>
       <li><NavLink exact activeClassName="current" to='/Manage'>Manage</NavLink> </li>
+      <li><NavLink exact activeClassName="current" to='/LogIn'>LogIn</NavLink></li>
 
       <SignOut />
     </ul>

@@ -1,8 +1,32 @@
-import React, { Component } from "react";
+import React, { API, Component, useState } from "react";
 import S3 from "react-aws-s3";
+import Amplify, { Auth, Storage } from 'aws-amplify';
+import awsconfig from '../aws-exports';
+Amplify.configure(awsconfig);
+import { Storage, StorageProvider } from 'aws-amplify';
 
-class S3upload extends Component {
-    constructor(props){
+export default class S3upload extends Component {
+    state = {fileUrl:'', file: '', filename:''}
+    handleChange = e => {
+      const file = e.target.files[0]
+      this.setState({
+        fileUrl: URL.createObjectURL(file),
+        file,
+        filename: file.name
+      })
+      saveFile = () => {
+        Storage.put(this.state.filename, this.state.file)
+          .then(()=> {
+            console.log("SUCCESS")
+            this.setState({fileURL:'', file:'', filename:''})
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+
+    /*constructor(props){
         super(props);
         this.state = {
             
@@ -24,7 +48,7 @@ class S3upload extends Component {
         //console.log(config)
         const ReactS3Client = new S3(config);
 
-        ReactS3Client.uploadFile(file, newFileName).then(data=>console.log(data)).catch(err=>console.error(err))
+        ReactS3Client.uploadFile(file, newFileName).then(data=>console.log(data)).catch(err=>console.error(err))*/
         /*ReactS3Client.uploadFile(file, newFileName).then(data => {
             console.log(config)
             console.log(data);
@@ -46,10 +70,8 @@ class S3upload extends Component {
                 console.log(err);
             }
             console.log(`File upload to: ${data.Location}`)
-        });*/
+        });
 
 
-    }
+    }*/
 }
-
-export default S3upload;

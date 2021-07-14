@@ -127,7 +127,7 @@ export class Balance extends Component {
 export class ManageAssignments extends Component {
   render() {
     return(
-      <div classname = 'manage'>
+      <div className = 'manage'>
         <h1>Mangage your hits</h1>
         < Manage/>
 
