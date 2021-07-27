@@ -1,19 +1,14 @@
 import React, { Component } from "react";
-import AWS, { Endpoint } from 'aws-sdk';
-
+import AWS, { Endpoint } from "aws-sdk";
 
 class AddHit extends Component {
-    
-    constructor(props){
-        super(props);
-        this.state = {
-            
-            }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    CreateHit(title, desc, assignments, lifetime, duration, reward, fileName){
-
-        var xml = `<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+  CreateHit(title, desc, assignments, lifetime, duration, reward, fileName) {
+    var xml = `<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
             <HTMLContent><![CDATA[
                 <!DOCTYPE html>
             <html>
@@ -90,35 +85,41 @@ class AddHit extends Component {
             ]]>
             </HTMLContent>
                 <FrameHeight>450</FrameHeight>
-            </ExternalQuestion>`
-    
-        AWS.config.update({
-            accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
-            secretAccessKey:process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-            region:"us-east-1",
-            endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com/"
-        });
+            </ExternalQuestion>`;
 
-        const mTurkClient = new AWS.MTurk();
+    AWS.config.update({
+      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+      region: "us-east-1",
+      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com/",
+    });
 
+    const mTurkClient = new AWS.MTurk();
 
-        if(title === undefined || desc === undefined || assignments === undefined || lifetime === undefined || duration === undefined || reward === undefined) {
-            alert("You did not fill out all fields or confirm your selection")
-        } else {
-            var myHIT = {
-                Title: title,
-                Description: desc,
-                MaxAssignments: assignments,
-                LifetimeInSeconds: lifetime,
-                AssignmentDurationInSeconds: duration,
-                Reward: reward,
-                Question: xml,
-                // Add a qualification requirement that the Worker must be either in Canada or the US 
-            }; 
-        }
-        //console.log(myHIT)
+    if (
+      title === undefined ||
+      desc === undefined ||
+      assignments === undefined ||
+      lifetime === undefined ||
+      duration === undefined ||
+      reward === undefined
+    ) {
+      alert("You did not fill out all fields or confirm your selection");
+    } else {
+      var myHIT = {
+        Title: title,
+        Description: desc,
+        MaxAssignments: assignments,
+        LifetimeInSeconds: lifetime,
+        AssignmentDurationInSeconds: duration,
+        Reward: reward,
+        Question: xml,
+        // Add a qualification requirement that the Worker must be either in Canada or the US
+      };
+    }
+    //console.log(myHIT)
 
-        /*mTurkClient.createHIT(myHIT, function (err, data) {
+    /*mTurkClient.createHIT(myHIT, function (err, data) {
             if (err) {
                 console.log(err.message);
             } else {
@@ -127,7 +128,6 @@ class AddHit extends Component {
                 console.log('HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=' + data.HIT.HITTypeId + ' with this HITId: ' + data.HIT.HITId);
             }
           })*/
-
-    }
+  }
 }
 export default AddHit;

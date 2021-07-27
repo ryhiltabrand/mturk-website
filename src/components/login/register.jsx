@@ -1,32 +1,32 @@
 import React from "react";
 
-
 export class Register extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render(){
-        return (
-           <div>
-            <div className="header">Login</div>
-            <div className="Content">
-                <div className="form">
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" name='username' placeholder='username'/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" name='password' placeholder='password'/>
-                    </div>
-                </div>
+  render() {
+    return (
+      <div>
+        <div className="header">Login</div>
+        <div className="Content">
+          <div className="form">
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input type="text" name="username" placeholder="username" />
             </div>
-            <div className="footer">
-                <button type="button" className="btn">Register</button>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input type="password" name="password" placeholder="password" />
             </div>
-            </div>
-        )
-       
-    }
+          </div>
+        </div>
+        <div className="footer">
+          <button type="button" className="btn">
+            Register
+          </button>
+        </div>
+      </div>
+    );
+  }
 }

@@ -9,7 +9,7 @@ import "./App.css";
 //import "./nav.css";
 //import { render } from "@testing-library/react";
 //import util from 'util';
-import AWS from 'aws-sdk';
+import AWS from "aws-sdk";
 //import { GetAccountBalanceCommand } from "@aws-sdk/client-mturk";
 //var mturk = require('api-mturk');
 
@@ -34,42 +34,46 @@ var xml = `<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanica
       ]]>
       </HTMLContent>
         <FrameHeight>450</FrameHeight>
-    </HTMLQuestion>`
-                    
-  // Construct the HIT object below
-  var myHIT = {
-      Title: 'Ryan',
-      Description: 'Test',
-      MaxAssignments: 10,
-      LifetimeInSeconds: 100000,
-      AssignmentDurationInSeconds: 600,
-      Reward: '0.20',
-      Question: xml,
+    </HTMLQuestion>`;
 
-      // Add a qualification requirement that the Worker must be either in Canada or the US 
-      
-  };
+// Construct the HIT object below
+var myHIT = {
+  Title: "Ryan",
+  Description: "Test",
+  MaxAssignments: 10,
+  LifetimeInSeconds: 100000,
+  AssignmentDurationInSeconds: 600,
+  Reward: "0.20",
+  Question: xml,
 
-  // Publish the object created above
+  // Add a qualification requirement that the Worker must be either in Canada or the US
+};
+
+// Publish the object created above
 
 AWS.config = {
   accessKeyId: "",
   secretAccessKey: "",
   region: "us-east-1",
-  endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com"
-}
+  endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
+};
 
 var mturk = new AWS.MTurk();
 
 mturk.createHIT(myHIT, function (err, data) {
   if (err) {
-      console.log(err.message);
+    console.log(err.message);
   } else {
-      console.log(data);
-      // Save the HITId printed by data.HIT.HITId and use it in the RetrieveAndApproveResults.js code sample
-      console.log('HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=' + data.HIT.HITTypeId + ' with this HITId: ' + data.HIT.HITId);
+    console.log(data);
+    // Save the HITId printed by data.HIT.HITId and use it in the RetrieveAndApproveResults.js code sample
+    console.log(
+      "HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=" +
+        data.HIT.HITTypeId +
+        " with this HITId: " +
+        data.HIT.HITId
+    );
   }
-})
+});
 
 /*mturk.getAccountBalance({}, function (err, data) {
   if (err) console.log(err, err.stack); // an error occurred
@@ -77,11 +81,12 @@ mturk.createHIT(myHIT, function (err, data) {
 });*/
 
 var params = {
-  MaxResults: '100'
+  MaxResults: "100",
 };
-mturk.listHITs(params, function(err, data) {
-  if (err) console.log(err, err.stack); // an error occurred
-  else     console.log(data);           // successful response
+mturk.listHITs(params, function (err, data) {
+  if (err) console.log(err, err.stack);
+  // an error occurred
+  else console.log(data); // successful response
 });
 
 /*var paramsLA = {
@@ -96,43 +101,40 @@ mturk.listAssignmentsForHIT(paramsLA, function(err, data) {
   else     console.log(data);           // successful response
 });*/
 
-
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.state = {value: ''};
+    this.state = { value: "" };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);  
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
-
   handleFormSubmit() {
-    const urlParams = new URLSearchParams(window.location.search)
-    document.getElementById('inputAssignmentId').value = urlParams.get('assignmentId')
-    document.getElementById('mturk_form').submit()
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById("inputAssignmentId").value =
+      urlParams.get("assignmentId");
+    document.getElementById("mturk_form").submit();
   }
 
   handleClick() {
-    console.log('Click happened');
+    console.log("Click happened");
   }
 
-  handleChange(event) {    
-    this.setState({value: event.target.value});  
+  handleChange(event) {
+    this.setState({ value: event.target.value });
   }
   handleSubmit() {
-    var url = 'https://workersandbox.mturk.com/mturk/preview?groupId='+this.state.value;
+    var url =
+      "https://workersandbox.mturk.com/mturk/preview?groupId=" +
+      this.state.value;
     window.location.href = url;
-    window.open(url, 'MsgWindow', 'width=800,height=600');
+    window.open(url, "MsgWindow", "width=800,height=600");
     console.log(url);
   }
-  
 
   render() {
-
-    var question = 'Who made the iphone'
+    var question = "Who made the iphone";
     var xml = `<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
     <HTMLContent><![CDATA[
       <!DOCTYPE html>
@@ -153,12 +155,12 @@ class App extends Component {
       ]]>
       </HTMLContent>
         <FrameHeight>450</FrameHeight>
-    </HTMLQuestion>`
+    </HTMLQuestion>`;
 
-    return(
+    return (
       <div className="App">
         <head>
-          <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         </head>
         <body>
           {/*<button onClick={() => this.handleFormSubmit()}>Click Me</button>
@@ -170,18 +172,32 @@ class App extends Component {
             </label>
             <input type="submit" value="send" />
           </form>*/}
-          <form action="https://workersandbox.mturk.com/mturk/externalSubmit" id="mturk_form" method="post" name="mturk_form">
-            <input id="assignmentId" name="assignmentId" type="hidden" value="" />
+          <form
+            action="https://workersandbox.mturk.com/mturk/externalSubmit"
+            id="mturk_form"
+            method="post"
+            name="mturk_form"
+          >
+            <input
+              id="assignmentId"
+              name="assignmentId"
+              type="hidden"
+              value=""
+            />
 
             <h1>{question}</h1>
-            <p><textarea cols="80" name="answer" rows="3"></textarea></p>
-            <p><input id="submitButton" type="submit" value="Submit"/></p>
-          </form> 
-          
-          </body>
-
-      </div>);
-  }}
+            <p>
+              <textarea cols="80" name="answer" rows="3"></textarea>
+            </p>
+            <p>
+              <input id="submitButton" type="submit" value="Submit" />
+            </p>
+          </form>
+        </body>
+      </div>
+    );
+  }
+}
 
 /*
 class App extends Component {
