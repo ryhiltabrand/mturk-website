@@ -84,7 +84,7 @@ class ListHits extends Component {
   }
 
   showHit() {
-    var current = "";
+    
     var currentHit = this.state.hit;
     if (Object.keys(this.state.hit).length === 0) {
       console.log("no select");

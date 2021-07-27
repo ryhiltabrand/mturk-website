@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import S3 from "react-aws-s3";
 
 class S3upload extends Component {
@@ -12,8 +12,7 @@ class S3upload extends Component {
     var file = fileInput;
     var newFileName = fileInput.name;
 
-    const BUCKET_NAME = "custom-figures-odu-examples";
-
+    
     const config = {
       bucketName: "figures-odu-examples-6-27-2021",
       region: "us-east-1",

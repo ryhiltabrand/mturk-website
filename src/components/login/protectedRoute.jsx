@@ -1,25 +1,15 @@
-import Amplify, { Auth, signInButtonContent } from "aws-amplify";
-import { NavLink, Switch, Route, Redirect, HashRouter } from "react-router-dom";
+import Amplify, { Auth} from "aws-amplify";
+import {Switch, Route} from "react-router-dom";
 import awsExports from "../../aws-exports";
-import React, { Component, useEffect, useState } from "react";
+import React, {Component} from "react";
+
 
 import {
-  withAuthenticator,
-  AmplifyAuthenticator,
-  AmplifySignOut,
-  AmplifySignIn,
-  AmplifyAuthContainer,
-} from "@aws-amplify/ui-react";
-import { SignOut, SignIn, Authenticator, Greetings } from "aws-amplify-react";
-
-import {
-  Home,
   Balance,
-  Hits,
   HitAdder,
   ManageAssignments,
 } from "../pages/pages";
-import Manage from "../managehits";
+
 
 Amplify.configure(awsExports);
 class Protected extends Component {
@@ -45,7 +35,7 @@ class Protected extends Component {
     Auth.currentAuthenticatedUser({
       bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
     })
-      .then((user) => console.log(user))
+      .then((user) => console.log(1))
       .catch((err) => console.log(err));
     if (this.state.authStatus === true) {
       return (
@@ -73,7 +63,7 @@ class Protected extends Component {
   }
 }
 
-const Navigation = () => (
+/*const Navigation = () => (
   <nav>
     <ul>
       <li>
@@ -104,7 +94,7 @@ const Navigation = () => (
       <SignOut />
     </ul>
   </nav>
-);
+);*/
 
 /*export default AmplifyAuthenticator(Protected, {
     usernameAttributes: 'email'

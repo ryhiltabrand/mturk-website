@@ -4,25 +4,13 @@ import {
   NavLink,
   Switch,
   Route,
-  Router,
   BrowserRouter,
 } from "react-router-dom";
 import { Logins } from "./components/login/index";
 import ProtectedRoute from "./components/login/protectedRoute";
-import { SignOut, SignIn, Authenticator, Greetings } from "aws-amplify-react";
-import Amplify, { Auth } from "aws-amplify";
-import { AmplifyAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
-import { Home, Balance, Hits } from "./components/pages/pages";
+import { SignOut } from "aws-amplify-react";
+import { Home, Hits } from "./components/pages/pages";
 
-/*const App = () => (
-  <div className='app'>
-    <h1>O.D.U. AWSMTURK DEMO</h1>
-    <Main />
-    <ProtectedRoute />
-  </div>
-);*/
-
-const federated = {};
 class App extends Component {
   state = {
     authState: {

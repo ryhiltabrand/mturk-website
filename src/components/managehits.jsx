@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import AWS from "aws-sdk";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
-import mturk from "./mturk";
 
 class Manage extends Component {
   constructor(props) {
@@ -19,14 +18,6 @@ class Manage extends Component {
     this.grabHit = this.grabHit.bind(this);
     this.grabAssignment = this.grabAssignment.bind(this);
     this.gethitinfo = this.gethitinfo.bind(this);
-
-    AWS.config.update({
-      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
-      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-      region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
-    const mTurkClient = new AWS.MTurk();
   }
   componentDidMount() {
     this.getMTurkHITs();
@@ -92,7 +83,7 @@ class Manage extends Component {
   }
 
   showHit() {
-    var current = "";
+
     var currentHit = this.state.hit;
     if (Object.keys(this.state.hit).length === 0) {
       console.log("no select");
