@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import AWS from "aws-sdk";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
+import AddAssignments from './ModalForms/AddAssignments'
+import AddTime from './ModalForms/AddTime'
+import Button from 'react-bootstrap/Button';
 
 class Manage extends Component {
   constructor(props) {
@@ -11,6 +14,9 @@ class Manage extends Component {
       ID: "",
       hit: {},
       assignmentsForCurrentHIT: [],
+
+      AssignisOpen: false,
+      TimeisOpen: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -19,6 +25,16 @@ class Manage extends Component {
     this.grabAssignment = this.grabAssignment.bind(this);
     this.gethitinfo = this.gethitinfo.bind(this);
   }
+
+
+
+  openAssign = () => this.setState({ AssignisOpen: true });
+  closeAssign = () => this.setState({ AssignisOpen: false });
+  openTime = () => this.setState({ TimeisOpen: true });
+  closeTime = () => this.setState({ TimeisOpen: false });
+
+
+
   componentDidMount() {
     this.getMTurkHITs();
   }
@@ -83,7 +99,6 @@ class Manage extends Component {
   }
 
   showHit() {
-
     var currentHit = this.state.hit;
     if (Object.keys(this.state.hit).length === 0) {
       console.log("no select");
@@ -182,28 +197,6 @@ class Manage extends Component {
     });
   }
 
-  addAssignments(hitId) {
-    AWS.config.update({
-      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
-      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-      region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
-
-    const mturk = new AWS.MTurk();
-
-    var params = {
-      HITId: hitId,
-      NumberOfAdditionalAssignments: 1,
-    };
-
-    mturk.createAdditionalAssignmentsForHIT(params, function (err, data) {
-      if (err) console.log(err, err.stack);
-      // an error occurred
-      else console.log(data); // successful response
-    });
-  }
-
   addTime(hitId) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -268,6 +261,7 @@ class Manage extends Component {
     });
   }
 
+  
   render() {
     const reactTableColumns = [
       {
@@ -298,13 +292,13 @@ class Manage extends Component {
         Header: "Manage",
         accessor: "HITId",
         Cell: (original) => (
-          <button
+          <Button
             value={original.value}
             onClick={() => this.grabAssignment(original.value)}
           >
             {" "}
             Manage{" "}
-          </button>
+          </Button>
         ),
       },
     ];
@@ -364,52 +358,61 @@ class Manage extends Component {
         <h1>
           {" "}
           You have {this.state.assignmentsForCurrentHIT.length} Assignments for
-          this Hit(s).{" "}
+          HIT {this.gethitinfo()}.{" "}
         </h1>
         {console.log(this.gethitinfo())}
 
         {
-          <button
+          <Button
             value={this.gethitinfo()}
             onClick={() => this.deleteHit(this.gethitinfo())}
           >
             {" "}
             Delete{" "}
-          </button>
+          </Button>
         }
         {
-          <button
+          <Button
             value={this.gethitinfo()}
             onClick={() => this.expireHit(this.gethitinfo())}
           >
             {" "}
             Expire{" "}
-          </button>
+          </Button>
         }
-        {
-          <button
-            value={this.gethitinfo()}
-            onClick={() => this.addAssignments(this.gethitinfo())}
-          >
-            {" "}
-            Add Assignments{" "}
-          </button>
+
+        <Button onClick={this.openAssign}>Add Assignments</Button>
+
+        { this.state.AssignisOpen ? 
+          <AddAssignments
+            hit={this.gethitinfo()}
+            closeModal={this.closeAssign} 
+            isOpen={this.state.AssignisOpen} 
+          /> 
+          : 
+          null 
         }
-        {
-          <button
-            value={this.gethitinfo()}
-            onClick={() => this.addTime(this.gethitinfo())}
-          >
-            {" "}
-            Add Time{" "}
-          </button>
+
+        <Button onClick={this.openTime}>Add Time</Button>
+
+        { this.state.TimeisOpen ? 
+          <AddTime
+            hit={this.gethitinfo()}
+            closeModal={this.closeTime} 
+            isOpen={this.state.TimeisOpen} 
+          /> 
+          : 
+          null 
         }
+
         <ReactTable
           data={this.state.assignmentsForCurrentHIT}
           columns={AssignmentTableColumns}
           defaultPageSize={5}
         />
+        
       </div>
+      
     );
   }
 }

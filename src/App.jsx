@@ -59,6 +59,11 @@ const Navigation = () => (
         </NavLink>{" "}
       </li>
       <li>
+        <NavLink exact activeClassName="current" to="/Upload">
+          Upload
+        </NavLink>{" "}
+      </li>
+      <li>
         <NavLink exact activeClassName="current" to="/LogIn">
           LogIn
         </NavLink>

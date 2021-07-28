@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AWS, { Endpoint } from "aws-sdk";
+import AWS from "aws-sdk";
 import Papa from "papaparse";
 
 class AddHit extends Component {

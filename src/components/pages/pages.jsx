@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import ListHits from "../getturk";
+import ListHits from "../viewHits";
 import S3upload from "../uploads3";
 
 import AddHit from "../addHitCSV"
@@ -59,5 +59,16 @@ export class ManageAssignments extends Component {
         <Manage />
       </div>
     );
+  }
+}
+
+export class UploadImages extends Component {
+  render() {
+    return (
+      <div className="upload">
+        <h1>Upload Images</h1>
+        <S3upload />
+      </div>
+    )
   }
 }

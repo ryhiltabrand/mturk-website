@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import AWS from "aws-sdk";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
+import Button from 'react-bootstrap/Button';
+
 
 class ListHits extends Component {
   constructor(props) {
@@ -56,6 +58,7 @@ class ListHits extends Component {
       }
     });
   }
+
   handleSubmit = (event) => {
     event.preventDefault();
     this.grabHit(this.state.ID);
@@ -86,18 +89,37 @@ class ListHits extends Component {
   showHit() {
     
     var currentHit = this.state.hit;
+    
+
     if (Object.keys(this.state.hit).length === 0) {
       console.log("no select");
     } else {
-      console.log(currentHit["HIT"]);
-      document.getElementById("output").innerHTML = Object.values(
+      var newarr = Object.values(currentHit["HIT"])
+      console.log(currentHit["HIT"])
+      console.log(newarr[6]);
+      /*document.getElementById("output").innerHTML = Object.values(
         currentHit["HIT"]
-      );
+      );*/
+      document.getElementById("output").innerHTML = newarr[6]
+      document.getElementById("output1").innerHTML =  `<a href='https://workersandbox.mturk.com/projects/${newarr[2]}/tasks' target="_"><input type="button" value="ACCEPT"/></a>`
     }
+  }
+
+  assign(b){
+    
+    if (b === "Assignable"){
+      var status="True"
+      return(<div>{status}</div>)
+    } else {
+       status="False"
+      return(<div>{status}</div>)
+    }
+    
   }
 
   render() {
     const reactTableColumns = [
+      
       {
         Header: "HIT Group Id",
         accessor: "HITGroupId",
@@ -123,16 +145,25 @@ class ListHits extends Component {
         Cell: (props) => <span>${props.value}</span>,
       },
       {
-        Header: "Attempt",
+        Header: "Available",
+        accessor: "HITStatus",
+        Cell: (props) => (
+          <div>
+              {this.assign(props.value)}
+          </div>)
+        
+      },
+      {
+        Header: "Preview",
         accessor: "HITId",
         Cell: (original) => (
-          <button
+          <Button
             value={original.value}
             onClick={() => this.grabHit(original.value)}
           >
             {" "}
-            Accept{" "}
-          </button>
+            Preview{" "}
+          </Button>
         ),
       },
     ];
@@ -143,12 +174,19 @@ class ListHits extends Component {
         {/*console.log(this.state.mturkHITs)*/}
 
         <ReactTable
+        defaultSorted={[
+          {
+            id: "HITStatus",
+            desc: false
+          }
+        ]}
           data={this.state.mturkHITs}
           columns={reactTableColumns}
           defaultPageSize={10}
         />
         {/*console.log(this.state.hit)*/}
         <p id="output"></p>
+        <p id="output1"></p>
         <script>{this.showHit()}</script>
       </div>
     );

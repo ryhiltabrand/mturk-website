@@ -26,7 +26,7 @@ class mturk extends Component {
     mTurkClient.getAccountBalance((err, data) => {
       if (err) {
         console.warn("Error making the mTurk API call:", err);
-        document.write("No work");
+        
       } else {
         // The call was a success
         const balance = `$${data.AvailableBalance}`;

@@ -8,6 +8,7 @@ import {
   Balance,
   HitAdder,
   ManageAssignments,
+  UploadImages
 } from "../pages/pages";
 
 
@@ -44,6 +45,7 @@ class Protected extends Component {
             <Route exact path="/HitAdder" component={HitAdder} />
             <Route exact path="/Balance" component={Balance} />
             <Route exact path="/Manage" component={ManageAssignments} />
+            <Route exact path="/Upload" component={UploadImages} />
           </Switch>
         </div>
       );
