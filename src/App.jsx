@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import {
-  NavLink,
-  Switch,
-  Route,
-  BrowserRouter,
-} from "react-router-dom";
+import Amplify, { Auth } from "aws-amplify";
+import { NavLink, Switch, Route, BrowserRouter } from "react-router-dom";
 import { Logins, Logins2 } from "./components/login/index";
 import ProtectedRoute from "./components/login/protectedRoute";
 import { SignOut } from "aws-amplify-react";
@@ -13,25 +9,51 @@ import { Home, Hits } from "./components/pages/pages";
 import SignIn from "./components/login/signIn";
 
 class App extends Component {
-  state = {
-    authState: {
-      isLoggedIn: false,
-    },
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      authStatus: false,
+      loading: false,
+    };
+  }
+  componentDidMount() {
+    Auth.currentAuthenticatedUser()
+      .then((user) => {
+        this.setState({ loading: false, authStatus: true });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        //this.props.history.push('/LogIn');
+      });
+  }
   render() {
-    return (
-      <div className="app">
-        <h1>O.D.U. AWSMTURK DEMO</h1>
-        <BrowserRouter forceRefresh={true}>
-          <Main />
-          <ProtectedRoute />
-        </BrowserRouter>
-      </div>
-    );
+    Auth.currentAuthenticatedUser({
+      bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+    })
+      .then((user) => console.log(1))
+      .catch((err) => console.log(err));
+    if (this.state.authStatus === true) {
+      return (
+        <div className="app">
+          <h1>O.D.U. AWSMTURK DEMO</h1>
+          <BrowserRouter forceRefresh={true}>
+            <ProtectedRoute />
+          </BrowserRouter>
+        </div>
+      );
+    } else {
+      return (
+        <div className="app">
+          <h1>O.D.U. AWSMTURK DEMO</h1>
+          <BrowserRouter forceRefresh={true}>
+            <Main />
+          </BrowserRouter>
+        </div>
+      );
+    }
   }
 }
-
-const Navigation = () => (
+const PNavigation = () => (
   <nav>
     <ul>
       <li>
@@ -64,9 +86,26 @@ const Navigation = () => (
           Upload
         </NavLink>{" "}
       </li>
-      
+
       <SignIn />
-      
+    </ul>
+  </nav>
+);
+const UPNavigation = () => (
+  <nav>
+    <ul>
+      <li>
+        <NavLink exact activeClassName="current" to="/">
+          Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink exact activeClassName="current" to="/Hits">
+          Hits
+        </NavLink>
+      </li>
+
+      <SignIn />
     </ul>
   </nav>
 );
@@ -74,11 +113,11 @@ const Navigation = () => (
 const Main = () => {
   return (
     <div>
-      <Navigation />
+      <UPNavigation />
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/Hits" component={Hits} />
-        <Route exact path="/LogIn" component={SignIn} />
+        
       </Switch>
     </div>
   );

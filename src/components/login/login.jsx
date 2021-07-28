@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Authenticator, Greetings, SignIn } from "aws-amplify-react";
+import { Authenticator, Greetings, SignIn} from "aws-amplify-react";
+import { Hub, Logger } from 'aws-amplify';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
 
@@ -38,6 +39,18 @@ export class Logins2 extends Component {
 
   };
   render() {
+    const logger = new Logger('My-Logger');
+    const listener = (data) => {
+      switch (data.payload.event) {
+          case 'signIn':
+              logger.window.location.reload()
+              break;
+          case 'signOut':
+            logger.window.location.reload()
+              break;
+    }
+    Hub.listen('auth', listener);
+  }
     return (
       <Modal show={this.props.isOpen} onHide={this.props.closeModal} centered>
         <Modal.Header closeButton>
@@ -45,7 +58,7 @@ export class Logins2 extends Component {
         </Modal.Header>
         <Modal.Body>
           <Authenticator hideDefault={true}>
-            <SignIn />
+            <SignIn onAuthEvent/>
             <Greetings
               inGreeting={(username) => "Hello " + username}
               outGreeting="Please sign in"

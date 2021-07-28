@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "react-table-6/react-table.css";
 import Button from "react-bootstrap/Button";
 import { Logins2 } from "./login";
-import OverlayTrigger from "react-bootstrap"
 
 class SignIn extends Component {
   constructor(props) {

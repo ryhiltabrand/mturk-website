@@ -1,7 +1,9 @@
 import Amplify, { Auth} from "aws-amplify";
-import {Switch, Route} from "react-router-dom";
+import {Switch, Route, NavLink} from "react-router-dom";
 import awsExports from "../../aws-exports";
 import React, {Component} from "react";
+import SignIn from "./signIn";
+import { Home, Hits } from "../pages/pages";
 
 
 import {
@@ -41,7 +43,10 @@ class Protected extends Component {
     if (this.state.authStatus === true) {
       return (
         <div>
+          <Navigation/>
           <Switch>
+          <Route exact path="/" component={Home} />
+        <Route exact path="/Hits" component={Hits} />
             <Route exact path="/HitAdder" component={HitAdder} />
             <Route exact path="/Balance" component={Balance} />
             <Route exact path="/Manage" component={ManageAssignments} />
@@ -65,7 +70,7 @@ class Protected extends Component {
   }
 }
 
-/*const Navigation = () => (
+const Navigation = () => (
   <nav>
     <ul>
       <li>
@@ -89,14 +94,21 @@ class Protected extends Component {
         </NavLink>
       </li>
       <li>
-        <NavLink exact activeClassName="current" to="/LogIn">
-          LogIn
-        </NavLink>
+        <NavLink exact activeClassName="current" to="/Manage">
+          Manage
+        </NavLink>{" "}
       </li>
-      <SignOut />
+      <li>
+        <NavLink exact activeClassName="current" to="/Upload">
+          Upload
+        </NavLink>{" "}
+      </li>
+      
+      <SignIn />
+      
     </ul>
   </nav>
-);*/
+);
 
 /*export default AmplifyAuthenticator(Protected, {
     usernameAttributes: 'email'
