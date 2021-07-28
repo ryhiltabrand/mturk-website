@@ -6,10 +6,11 @@ import {
   Route,
   BrowserRouter,
 } from "react-router-dom";
-import { Logins } from "./components/login/index";
+import { Logins, Logins2 } from "./components/login/index";
 import ProtectedRoute from "./components/login/protectedRoute";
 import { SignOut } from "aws-amplify-react";
 import { Home, Hits } from "./components/pages/pages";
+import SignIn from "./components/login/signIn";
 
 class App extends Component {
   state = {
@@ -63,13 +64,9 @@ const Navigation = () => (
           Upload
         </NavLink>{" "}
       </li>
-      <li>
-        <NavLink exact activeClassName="current" to="/LogIn">
-          LogIn
-        </NavLink>
-      </li>
-
-      <SignOut />
+      
+      <SignIn />
+      
     </ul>
   </nav>
 );
@@ -81,7 +78,7 @@ const Main = () => {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/Hits" component={Hits} />
-        <Route exact path="/LogIn" component={Logins} />
+        <Route exact path="/LogIn" component={SignIn} />
       </Switch>
     </div>
   );
