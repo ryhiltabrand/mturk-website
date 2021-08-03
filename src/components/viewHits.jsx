@@ -1,9 +1,13 @@
+/**
+ * @file Handles the display of hits to users
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import React, { Component } from "react";
 import AWS from "aws-sdk";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
-import Button from 'react-bootstrap/Button';
-
+import Button from "react-bootstrap/Button";
 
 class ListHits extends Component {
   constructor(props) {
@@ -31,6 +35,9 @@ class ListHits extends Component {
     });
   }
 
+  /**
+   * @function grabs max hits available to grab and sets the mTurkhits state
+   */
   getMTurkHITs() {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -49,11 +56,6 @@ class ListHits extends Component {
       // an error occurred
       else {
         const hits = data.HITs;
-        //console.log(hits[0])
-        //const myArray = Object.values(data.HITs[0])
-        //console.log(data.HITs);
-        //document.getElementById('output').innerHTML = "these are your hits "+ myArray;
-        //document.getElementById('output').innerHTML = Object.values(hits[0]);
         this.setState({ mturkHITs: hits });
       }
     });
@@ -64,8 +66,11 @@ class ListHits extends Component {
     this.grabHit(this.state.ID);
   };
 
+  /**
+   * @function changes the state of which hit is selected from table
+   * @param {string} hitID - ID of hit selected
+   */
   grabHit(hitID) {
-    console.log(hitID);
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
@@ -80,45 +85,43 @@ class ListHits extends Component {
       if (err) console.log(err);
       else {
         const currenthit = data;
-        //console.log(currenthit);
         this.setState({ hit: currenthit });
       }
     });
   }
 
+  /**
+   * @function displays the hit of current state
+   */
   showHit() {
-    
     var currentHit = this.state.hit;
 
-    if (Object.keys(this.state.hit).length === 0) {
-      console.log("no select");
-    } else {
-      var newarr = Object.values(currentHit["HIT"])
-      console.log(currentHit["HIT"])
-      console.log(newarr[6]);
-      /*document.getElementById("output").innerHTML = Object.values(
-        currentHit["HIT"]
-      );*/
-      document.getElementById("output").innerHTML = newarr[6]
-      document.getElementById("output1").innerHTML =  `<a href='https://workersandbox.mturk.com/projects/${newarr[2]}/tasks' target="_"><input type="button" value="ACCEPT"/></a>`
+    if (Object.keys(this.state.hit).length !== 0) {
+      var newarr = Object.values(currentHit["HIT"]);
+      document.getElementById("output").innerHTML = newarr[6];
+      document.getElementById(
+        "output1"
+      ).innerHTML = `<a href='https://workersandbox.mturk.com/projects/${newarr[2]}/tasks' target="_"><input type="button" value="ACCEPT"/></a>`;
     }
   }
 
-  assign(b){
-    
-    if (b === "Assignable"){
-      var status="True"
-      return(<div>{status}</div>)
+  /**
+   * 
+   * @param {string} hitStatus - status of hit
+   * @returns html div of true or false
+   */
+  assign(hitStatus) {
+    if (hitStatus === "Assignable") {
+      var status = "True";
+      return <div>{status}</div>;
     } else {
-       status="False"
-      return(<div>{status}</div>)
+      status = "False";
+      return <div>{status}</div>;
     }
-    
   }
 
   render() {
     const reactTableColumns = [
-      
       {
         Header: "HIT Group Id",
         accessor: "HITGroupId",
@@ -146,11 +149,7 @@ class ListHits extends Component {
       {
         Header: "Available",
         accessor: "HITStatus",
-        Cell: (props) => (
-          <div>
-              {this.assign(props.value)}
-          </div>)
-        
+        Cell: (props) => <div>{this.assign(props.value)}</div>,
       },
       {
         Header: "Preview",
@@ -170,20 +169,18 @@ class ListHits extends Component {
     return (
       <div>
         <h1> You have {this.state.mturkHITs.length} HIT(s). </h1>
-        {/*console.log(this.state.mturkHITs)*/}
 
         <ReactTable
-        defaultSorted={[
-          {
-            id: "HITStatus",
-            desc: false
-          }
-        ]}
+          defaultSorted={[
+            {
+              id: "HITStatus",
+              desc: false,
+            },
+          ]}
           data={this.state.mturkHITs}
           columns={reactTableColumns}
           defaultPageSize={10}
         />
-        {/*console.log(this.state.hit)*/}
         <p id="output"></p>
         <p id="output1"></p>
         <script>{this.showHit()}</script>

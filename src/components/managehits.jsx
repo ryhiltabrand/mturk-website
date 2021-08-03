@@ -52,7 +52,9 @@ class Manage extends Component {
       [name]: value,
     });
   }
-
+  /**
+   * @function grabs max hits available to grab and sets the mTurkhits state
+   */
   getMTurkHITs() {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -75,6 +77,7 @@ class Manage extends Component {
       }
     });
   }
+
   handleSubmit = (event) => {
     event.preventDefault();
     this.grabHit(this.state.ID);
