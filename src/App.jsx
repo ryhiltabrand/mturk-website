@@ -11,21 +11,25 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      authStatus: false,  //sets login 
+      authStatus: false,  //Authorization login variable state
     };
-    this.listener = this.listener.bind(this);
+    this.listener = this.listener.bind(this); //allows for the use of changing state in function
   }
   componentDidMount() {
     Hub.listen('auth', this.listener);
 
     Auth.currentAuthenticatedUser()
-      .then((user) => {
+      .then(() => {
         this.setState({ authStatus: true });
       })
       .catch(() => {
       });
   }
   
+  /** 
+   * Listens for any authorization change after the first render.
+   * Allows for state change on authStatus to allow for a new render.
+  */
   listener = (data) => {
     switch (data.payload.event) {
         case 'signIn':
@@ -38,12 +42,11 @@ class App extends Component {
           break;
     }
 }
-  changeAuthState = (dataType) => {
-    this.setState({
-     dataType: dataType
-    });
-   }
   render() {
+    
+    /**
+     * @returns navigation bar for unprotected routes
+     */
     const UPNavigation = () => (
       <nav>
         <ul>
@@ -58,10 +61,14 @@ class App extends Component {
             </NavLink>
           </li>
     
-          <SignIn changeAuthState={this.changeAuthState} />
+          <SignIn/>
         </ul>
       </nav>
     );
+
+    /**
+     * @returns Unprotected routes
+     */
     const Main = () => {
       return (
         <div>
@@ -77,7 +84,6 @@ class App extends Component {
     if (this.state.authStatus === true) {
       return (
         <div className="app">
-          
           <h1>O.D.U. AWSMTURK DEMO</h1>
           <BrowserRouter forceRefresh={false}>
             <ProtectedRoute />
@@ -86,8 +92,7 @@ class App extends Component {
       );
     } else {
       return (
-        <div className="app">
-          
+        <div className="app"> 
           <h1>O.D.U. AWSMTURK DEMO</h1>
           <BrowserRouter forceRefresh={false}>
             <Main />

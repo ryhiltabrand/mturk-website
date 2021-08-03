@@ -13,19 +13,7 @@ export class Logins extends Component {
       [name]: value,
     });
   };
-  handleSubmitAssign = (e) => {
-    //e.preventDefault();
 
-    console.log(e);
-
-  };
-
-  changeAuth = (e) => {
-   
-       var type = e;
-       this.props.changeAuthState(type); // call it here with this.props!!
-    }
-  
   
   render() {
     
@@ -66,12 +54,6 @@ export class Logins3 extends Component {
     console.log(e);
 
   };
-
-  changeAuth = (e) => {
-   
-       var type = e;
-       this.props.changeAuthState(type); // call it here with this.props!!
-    }
   
   
   render() {
