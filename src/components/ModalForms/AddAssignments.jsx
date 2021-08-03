@@ -1,11 +1,21 @@
+/**
+ * @file Handles the modal pop up and addition of assignments of a hit
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import AWS from "aws-sdk";
+
 export default class AddAssignments extends Component {
   state = { name: null };
-
+  /**
+   * @function Handles addition of assignments by calling mturk api
+   * @param {string} hitId - id of hit where assignments will be added
+   * @param {float} amount - ammount of assignments to be added
+   */
   addAssignments(hitId, amount) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -22,9 +32,9 @@ export default class AddAssignments extends Component {
     };
 
     mturk.createAdditionalAssignmentsForHIT(params, function (err, data) {
-      if (err) console.log(err, err.stack);
+      if (err) alert('Bad input');
       // an error occurred
-      else console.log(data); // successful response
+      else alert(`You have added ${params.NumberOfAdditionalAssignments} assignments to the hit`); // successful response
     });
   }
 
@@ -39,16 +49,10 @@ export default class AddAssignments extends Component {
   };
 
   handleSubmitAssign = (e) => {
-    //e.preventDefault();
-
-    console.log(this.state.NumberOfAdditionalAssignments);
-    console.log(e);
-
     this.addAssignments(e, this.state.NumberOfAdditionalAssignments);
   };
 
   render() {
-    console.log(this.props.hit);
 
     return (
       <Modal show={this.props.isOpen} onHide={this.props.closeModal} centered>
@@ -56,7 +60,7 @@ export default class AddAssignments extends Component {
           <Modal.Title>Add Assignments</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmitAssign}>
             <label>
               How Many Assignments Would you like to add? <br />
               <input
@@ -74,7 +78,7 @@ export default class AddAssignments extends Component {
           <Button
             variant="primary"
             type="submit"
-            onClick={() => this.handleSubmit(this.props.hit)}
+            onClick={() => this.handleSubmitAssign(this.props.hit)}
           >
             Submit
           </Button>

@@ -360,7 +360,6 @@ class Manage extends Component {
           You have {this.state.assignmentsForCurrentHIT.length} Assignments for
           HIT {this.gethitinfo()}.{" "}
         </h1>
-        {console.log(this.gethitinfo())}
 
         {
           <Button

@@ -1,11 +1,22 @@
+/**
+ * @file Handles the modal pop up and addition of time for a hit
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import AWS from "aws-sdk";
+
 export default class AddTime extends Component {
   state = { name: null };
 
+  /**
+   * @function Handles addition of time by calling mturk api
+   * @param {string} hitId - id of hit where assignments will be added
+   * @param {int} TimeToBeAdded - ammount of time to be added
+   */
   addTime(hitId, TimeToBeAdded) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -15,16 +26,16 @@ export default class AddTime extends Component {
     });
 
     const mturk = new AWS.MTurk();
-    //var addedhours = 1000;
+    
     var params = {
       ExpireAt: Date.now() / 1000 + Number(TimeToBeAdded),
       HITId: hitId,
     };
-    console.log(params, TimeToBeAdded, Date.now())
+
     mturk.updateExpirationForHIT(params, function (err, data) {
-      if (err) console.log(err, err.stack);
+      if (err) alert('Bad input');
       // an error occurred
-      else console.log(data); // successful response
+      else alert(`You have added ${params.ExpireAt} time to the hit`); // successful response
     });
   }
 
@@ -39,16 +50,11 @@ export default class AddTime extends Component {
   };
 
   handleSubmit = (e) => {
-    //e.preventDefault();
-
-    console.log(this.state.TimeToBeAdded);
-    console.log(e);
 
     this.addTime(e, this.state.TimeToBeAdded);
   };
 
   render() {
-    console.log(this.props.hit);
 
     return (
       <Modal show={this.props.isOpen} onHide={this.props.closeModal} centered>
