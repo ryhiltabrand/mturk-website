@@ -7,11 +7,6 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mturkHITs: [],
-      ID: "",
-      hit: {},
-      assignmentsForCurrentHIT: [],
-
       LogisOpen: false,
     };
 
@@ -33,7 +28,7 @@ class SignIn extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.grabHit(this.state.ID);
+    
   };
 
   render() {
@@ -44,7 +39,8 @@ class SignIn extends Component {
         {this.state.LogisOpen ? (
           <Logins2
             closeModal={this.closeLog} 
-            isOpen={this.state.LogisOpen} 
+            isOpen={this.state.LogisOpen}
+            changeAuthState={this.props.changeAuthState}
           />
         ) : null}
         </div>
