@@ -1,13 +1,22 @@
+/**
+ * @file Handles the creation of hits from the web app
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 var AWS = require("aws-sdk");
-var router = require("react-router-dom");
-var react = require("react");
-
-const fs = require("fs");
-const path = require("path");
 const csv = require("fast-csv");
-const { resolve } = require("path");
-const { promises } = require("stream");
 
+/**
+ * @function handles the creation of a hit where the paramters are passed into aws mturk api to create the hit.
+ * @param {string} fileName - name of the image
+ * @param {string} path - name of bucket path
+ * @param {string} caption - caption of image
+ * @param {string} inline_refrence - inline references
+ * @param {string} assignments - amount of available assignments
+ * @param {string} lifetime - amount of time the hit will stay active
+ * @param {string} duration - amount of time for each assignment
+ * @param {string} reward - amount each worker will recieve 0.00 form
+ */
 function CreateHit(
   fileName,
   path,
@@ -22,12 +31,14 @@ function CreateHit(
     accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
     secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     region: "us-east-1",
-    endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com/",
+    endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com/", //set for sandbox, change for production
   });
+
   const mTurkClient = new AWS.MTurk();
 
   var desc = `Please check the figure(${fileName}) and answer the following questions`;
 
+  // Hit layout in xml form
   var xml = `<HTMLQuestion  xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
             <HTMLContent><![CDATA[
                 <!DOCTYPE html>
@@ -119,7 +130,7 @@ function CreateHit(
     duration === undefined ||
     reward === undefined
   ) {
-    console.log("You did not fill out all fields or confirm your selection");
+    alert("all fields were not filled out");
   } else {
     var myHIT = {
       Title: fileName,
@@ -133,13 +144,12 @@ function CreateHit(
     };
   }
 
+  //Mturk api call
   mTurkClient.createHIT(myHIT, function (err, data) {
-    //console.log(myHIT)
+    
     if (err) {
-      console.log("hi");
       console.log(err.message);
     } else {
-      console.log(data);
       // Save the HITId printed by data.HIT.HITId and use it in the RetrieveAndApproveResults.js code sample
       console.log(
         "HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=" +
@@ -150,7 +160,10 @@ function CreateHit(
     }
   });
 }
-
+/**
+ * @function controls csv input and splits it appart
+ * @returns creation of hit
+ */
 var queryParameter = () =>
   new Promise((resolve) => {
     let returnLit = [];
@@ -162,12 +175,7 @@ var queryParameter = () =>
         inline_reference = data["inline_reference"];
         metadata = data["metadata"];
         label = data["label"];
-        console.log(sci_fig);
-        console.log(caption);
-        console.log(inline_reference);
-        console.log(metadata);
-        console.log(label);
-        console.log("breaks");
+        
         CreateHit(
           sci_fig,
           label,
@@ -187,4 +195,3 @@ var queryParameter = () =>
 
 queryParameter();
 
-//CreateHit(arch, 15, 86400, 3600, "0.10")
