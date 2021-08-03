@@ -7,7 +7,7 @@ import React, { Component } from "react";
 import ListHits from "../viewHits";
 import S3upload from "../uploads3";
 import AddHit from "../addHitCSV"
-import mturk from "../mturk";
+import AccountBalance from "../balance";
 import Manage from "../managehits";
 
 export function Home() {
@@ -41,13 +41,10 @@ export class HitAdder extends Component {
 
 export class Balance extends Component {
   render() {
-    const MTURK = new mturk();
-
     return (
       <div className="balance">
         <h1>Balance</h1>
-        <div id="output"></div>
-        <script>{MTURK.getAccountBalance()}</script>
+        <AccountBalance />
       </div>
     );
   }

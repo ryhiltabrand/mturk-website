@@ -1,3 +1,8 @@
+/**
+ * @file Handles the creation of hits from the web app
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import React, { Component } from "react";
 import AWS from "aws-sdk";
 import Papa from "papaparse";
@@ -28,7 +33,6 @@ class AddHit extends Component {
   }
 
   handleSubmit = (event) => {
-    //const s3 = new S3upload();
     event.preventDefault();
     alert(
       "you have inputed \n" +
@@ -51,14 +55,13 @@ class AddHit extends Component {
 
   CreateHit(results) {
     for (let i = 0; results.length > i; i++) {
-      //console.log(this.state)
-      //console.log(Object.values(results[i]));
       let fileName = Object.values(results[i])[0];
       let caption = Object.values(results[i])[1];
       let inline_refrence = Object.values(results[i])[2];
       let path = Object.values(results[i])[4];
       
       var desc = `Please check the figure(${fileName}) and answer the following questions`;
+      // Hit layout in xml form
       var xml = `<HTMLQuestion  xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
             <HTMLContent><![CDATA[
                 <!DOCTYPE html>
@@ -154,7 +157,6 @@ class AddHit extends Component {
       if (desc === undefined) {
         alert("You did not fill out all fields or confirm your selection");
       } else {
-        console.log(this.state)
         var myHIT = {
           Title: fileName,
           Description: desc,
@@ -165,14 +167,12 @@ class AddHit extends Component {
           Question: xml
           // Add a qualification requirement that the Worker must be either in Canada or the US
         };
-        console.log(myHIT)
         
       }
       mTurkClient.createHIT(myHIT, function (err, data) {
             if (err) {
-                console.log(err.message);
+                alert(err.message);
             } else {
-                console.log(data);
                 // Save the HITId printed by data.HIT.HITId and use it in the RetrieveAndApproveResults.js code sample
                 console.log('HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=' + data.HIT.HITTypeId + ' with this HITId: ' + data.HIT.HITId);
             }
@@ -183,6 +183,7 @@ class AddHit extends Component {
   resultSync = (results) => {
     this.CreateHit(results["data"]);
   };
+
   queryParameter = (file) => {
     let config = {
       header: true,

@@ -1,5 +1,5 @@
 /**
- * @file Handles the creation of hits from the web app
+ * @file Handles the creation of hits from console
  * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
  */
 

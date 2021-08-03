@@ -94,11 +94,6 @@ const Navigation = () => (
           Manage
         </NavLink>{" "}
       </li>
-      <li>
-        <NavLink exact activeClassName="current" to="/Upload">
-          Upload
-        </NavLink>{" "}
-      </li>
 
       <SignIn />
     </ul>

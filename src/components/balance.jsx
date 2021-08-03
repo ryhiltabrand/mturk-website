@@ -1,8 +1,13 @@
+/**
+ * @file Manages Renders the balance in mturk account
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import React, { Component } from "react";
 import "../App.css";
 import AWS from "aws-sdk";
 
-class mturk extends Component {
+class AccountBalance extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +26,7 @@ class mturk extends Component {
       region: "us-east-1",
       endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
     });
-    console.log("process", process.env.REACT_APP_AWS_ACCESS_KEY);
+    
     const mTurkClient = new AWS.MTurk();
     mTurkClient.getAccountBalance((err, data) => {
       if (err) {
@@ -29,33 +34,12 @@ class mturk extends Component {
         
       } else {
         // The call was a success
-        const balance = `$${data.AvailableBalance}`;
+        const balance = `${data.AvailableBalance}`;
         this.setState({ mturkAccountBalance: balance });
-        document.getElementById("output").innerHTML =
-          "Your balance is " + balance;
       }
     });
   }
 
-  /*getAssignmentsForHIT(hitId) {
-        AWS.config.update({
-          "accessKeyId": "",
-          "secretAccessKey": "",
-          "region": "us-east-1",
-          "endpoint": "https://mturk-requester-sandbox.us-east-1.amazonaws.com"
-        });
-        
-        const mTurkClient = new AWS.MTurk();
-        mTurkClient.listAssignmentsForHIT({HITId: hitId}, (err, data) => {
-          if (err) {
-            console.warn("Error making the mTurk API call:", err);
-          } else {
-            // The call was a success
-            const assignments = data.Assignments;
-            this.setState({ assignmentsForCurrentHIT: assignments });
-          }
-        })
-    }*/
 
   render() {
     return (
@@ -63,10 +47,10 @@ class mturk extends Component {
         <head>
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         </head>
-        <body>Hello</body>
+        <body><b>${this.state.mturkAccountBalance} is available</b></body>
       </div>
     );
   }
 }
 
-export default mturk;
+export default AccountBalance;

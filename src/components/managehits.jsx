@@ -1,10 +1,15 @@
+/**
+ * @file Handles the management of hits
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import React, { Component } from "react";
 import AWS from "aws-sdk";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
-import AddAssignments from './ModalForms/AddAssignments'
-import AddTime from './ModalForms/AddTime'
-import Button from 'react-bootstrap/Button';
+import AddAssignments from "./ModalForms/AddAssignments";
+import AddTime from "./ModalForms/AddTime";
+import Button from "react-bootstrap/Button";
 
 class Manage extends Component {
   constructor(props) {
@@ -16,24 +21,23 @@ class Manage extends Component {
       assignmentsForCurrentHIT: [],
 
       AssignisOpen: false,
-      TimeisOpen: false
+      TimeisOpen: false,
     };
 
+    //Binding to this class to have the ability to change states
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.grabHit = this.grabHit.bind(this);
     this.grabAssignment = this.grabAssignment.bind(this);
     this.gethitinfo = this.gethitinfo.bind(this);
+    this.dropAssignments = this.dropAssignments.bind(this);
   }
 
-
-
+  //Opening and closing of modal form states
   openAssign = () => this.setState({ AssignisOpen: true });
   closeAssign = () => this.setState({ AssignisOpen: false });
   openTime = () => this.setState({ TimeisOpen: true });
   closeTime = () => this.setState({ TimeisOpen: false });
-
-
 
   componentDidMount() {
     this.getMTurkHITs();
@@ -54,7 +58,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
+      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com", //set for sandbox, change for production
     });
 
     const mTurkClient = new AWS.MTurk();
@@ -76,8 +80,11 @@ class Manage extends Component {
     this.grabHit(this.state.ID);
   };
 
+  /**
+   * @function changes the state of which hit is selected from table
+   * @param {string} hitID - ID of hit selected
+   */
   grabHit(hitID) {
-    //console.log(hitID)
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
@@ -92,24 +99,27 @@ class Manage extends Component {
       if (err) console.log(err);
       else {
         const currenthit = data;
-        //console.log(currenthit);
         this.setState({ hit: currenthit });
       }
     });
   }
 
+  /**
+   * @function displays the hit of current state
+   */
   showHit() {
     var currentHit = this.state.hit;
-    if (Object.keys(this.state.hit).length === 0) {
-      console.log("no select");
-    } else {
-      console.log(currentHit["HIT"]);
+    if (Object.keys(this.state.hit).length !== 0) {
       document.getElementById("output").innerHTML = Object.values(
         currentHit["HIT"]
       );
     }
   }
 
+  /**
+   * @function changes the state of which hits assignments is selected from table
+   * @param {string} hitId
+   */
   grabAssignment(hitId) {
     this.grabHit(hitId);
     AWS.config.update({
@@ -126,17 +136,24 @@ class Manage extends Component {
         // The call was a success
         const assignments = data.Assignments;
         this.setState({ assignmentsForCurrentHIT: assignments });
-        console.log(assignments);
       }
     });
   }
 
+  /**
+   * @function changes current hit to empty
+   * @param {string} hitId
+   */
+  dropAssignments() {
+    this.setState({ hit: {} });
+  }
+
+  /**
+   * @function displays the assignment of current hit state into a string
+   */
   showAssignment() {
     var currentAssign = this.state.assignmentsForCurrentHIT;
-    if (Object.keys(this.state.assignmentsForCurrentHIT).length === 0) {
-      console.log("no select");
-    } else {
-      console.log(currentAssign);
+    if (Object.keys(this.state.assignmentsForCurrentHIT).length !== 0) {
       let temp = "";
       for (let i = 0; i < currentAssign.length; i++) {
         temp += Object.values(currentAssign[i]);
@@ -145,6 +162,10 @@ class Manage extends Component {
     }
   }
 
+  /**
+   * @function deletes hit by passing hit and calling mturk api
+   * @param {string} hitId
+   */
   deleteHit(hitId) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -158,23 +179,30 @@ class Manage extends Component {
       HITId: hitId,
     };
     mTurkClient.deleteHIT(params, function (err, data) {
-      if (err) console.log(err, err.stack);
+      if (err) alert(err, err.stack);
       // an error occurred
-      else console.log(data); // successful response
+      else alert(data); // successful response
     });
   }
 
+  /**
+   *
+   * @returns Hit as an array
+   */
   gethitinfo() {
     var arr = Object.values(this.state.hit);
     if (arr.length === 0) {
-      console.log("no length");
+      return null;
     } else {
       var hit = Object.values(arr[0]);
-      //console.log(hit[0])
       return hit[0];
     }
   }
 
+  /**
+   * @function Expires remaining time on a hit using mturk api
+   * @param {string} hitId
+   */
   expireHit(hitId) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -186,39 +214,21 @@ class Manage extends Component {
     const mTurkClient = new AWS.MTurk();
 
     var params = {
-      ExpireAt: Date.now() / 1000,
+      ExpireAt: Date.now() / 1000, //converts current time to acceptable format
       HITId: hitId,
     };
 
     mTurkClient.updateExpirationForHIT(params, function (err, data) {
-      if (err) console.log(err, err.stack);
+      if (err) alert(err, err.stack);
       // an error occurred
-      else console.log(data); // successful response
+      else alert(data); // successful response
     });
   }
 
-  addTime(hitId) {
-    AWS.config.update({
-      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
-      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-      region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
-
-    const mturk = new AWS.MTurk();
-    var addedhours = 1000;
-    var params = {
-      ExpireAt: Date.now() / 1000 + addedhours,
-      HITId: hitId,
-    };
-
-    mturk.updateExpirationForHIT(params, function (err, data) {
-      if (err) console.log(err, err.stack);
-      // an error occurred
-      else console.log(data); // successful response
-    });
-  }
-
+  /**
+   * @function approves assignment using the mturk api
+   * @param {string} assignmentId - id of a workers submitted assignment
+   */
   approveAssignment(assignmentId) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -233,12 +243,16 @@ class Manage extends Component {
       AssignmentId: assignmentId,
     };
     mturk.approveAssignment(params, function (err, data) {
-      if (err) console.log(err, err.stack);
+      if (err) alert(err, err.stack);
       // an error occurred
-      else console.log(data); // successful response
+      else alert(data); // successful response
     });
   }
 
+  /**
+   * @function rejects assignment using the mturk api
+   * @param {string} assignmentId - id of a workers submitted assignment
+   */
   rejectAssignment(assignmentId) {
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
@@ -255,14 +269,14 @@ class Manage extends Component {
     };
 
     mturk.rejectAssignment(params, function (err, data) {
-      if (err) console.log(err, err.stack);
+      if (err) alert(err, err.stack);
       // an error occurred
-      else console.log(data); // successful response
+      else alert(data); // successful response
     });
   }
 
-  
   render() {
+    //Columns for the table for hits
     const reactTableColumns = [
       {
         Header: "HIT Group Id",
@@ -302,6 +316,8 @@ class Manage extends Component {
         ),
       },
     ];
+
+    //Columns for the table of assignments
     const AssignmentTableColumns = [
       {
         Header: "Assignmet Id",
@@ -341,78 +357,89 @@ class Manage extends Component {
         ),
       },
     ];
+    if (this.gethitinfo() !== null) {
+      return (
+        <div>
+          <h1> You have {this.state.mturkHITs.length} HIT(s). </h1>
 
-    return (
-      <div>
-        <h1> You have {this.state.mturkHITs.length} HIT(s). </h1>
-        {/*console.log(this.state.mturkHITs)*/}
+          <ReactTable
+            data={this.state.mturkHITs}
+            columns={reactTableColumns}
+            defaultPageSize={10}
+          />
 
-        <ReactTable
-          data={this.state.mturkHITs}
-          columns={reactTableColumns}
-          defaultPageSize={10}
-        />
-        {/*console.log(this.state.hit)
-          <p id="output"></p>
-        <script>{this.showAssignment()}</script>*/}
-        <h1>
-          {" "}
-          You have {this.state.assignmentsForCurrentHIT.length} Assignments for
-          HIT {this.gethitinfo()}.{" "}
-        </h1>
-
-        {
-          <Button
-            value={this.gethitinfo()}
-            onClick={() => this.deleteHit(this.gethitinfo())}
-          >
+          <h1>
             {" "}
-            Delete{" "}
-          </Button>
-        }
-        {
-          <Button
-            value={this.gethitinfo()}
-            onClick={() => this.expireHit(this.gethitinfo())}
-          >
-            {" "}
-            Expire{" "}
-          </Button>
-        }
+            You have {this.state.assignmentsForCurrentHIT.length} Assignments
+            for HIT {this.gethitinfo()}.{" "}
+          </h1>
+          {
+            <Button
+              //value={this.gethitinfo()}
+              onClick={() => this.dropAssignments()}
+            >
+              Clear Selection
+            </Button>
+          }
+          {
+            <Button
+              value={this.gethitinfo()}
+              onClick={() => this.deleteHit(this.gethitinfo())}
+            >
+              {" "}
+              Delete{" "}
+            </Button>
+          }
+          {
+            <Button
+              value={this.gethitinfo()}
+              onClick={() => this.expireHit(this.gethitinfo())}
+            >
+              {" "}
+              Expire{" "}
+            </Button>
+          }
 
-        <Button onClick={this.openAssign}>Add Assignments</Button>
+          <Button onClick={this.openAssign}>Add Assignments</Button>
 
-        { this.state.AssignisOpen ? 
-          <AddAssignments
-            hit={this.gethitinfo()}
-            closeModal={this.closeAssign} 
-            isOpen={this.state.AssignisOpen} 
-          /> 
-          : 
-          null 
-        }
+          {this.state.AssignisOpen ? (
+            <AddAssignments
+              hit={this.gethitinfo()}
+              closeModal={this.closeAssign}
+              isOpen={this.state.AssignisOpen}
+            />
+          ) : null}
 
-        <Button onClick={this.openTime}>Add Time</Button>
+          <Button onClick={this.openTime}>Add Time</Button>
 
-        { this.state.TimeisOpen ? 
-          <AddTime
-            hit={this.gethitinfo()}
-            closeModal={this.closeTime} 
-            isOpen={this.state.TimeisOpen} 
-          /> 
-          : 
-          null 
-        }
+          {this.state.TimeisOpen ? (
+            <AddTime
+              hit={this.gethitinfo()}
+              closeModal={this.closeTime}
+              isOpen={this.state.TimeisOpen}
+            />
+          ) : null}
 
-        <ReactTable
-          data={this.state.assignmentsForCurrentHIT}
-          columns={AssignmentTableColumns}
-          defaultPageSize={5}
-        />
-        
-      </div>
-      
-    );
+          <ReactTable
+            data={this.state.assignmentsForCurrentHIT}
+            columns={AssignmentTableColumns}
+            defaultPageSize={5}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h1> You have {this.state.mturkHITs.length} HIT(s). </h1>
+
+          <ReactTable
+            data={this.state.mturkHITs}
+            columns={reactTableColumns}
+            defaultPageSize={10}
+          />
+        </div>
+      );
+    }
   }
 }
 
