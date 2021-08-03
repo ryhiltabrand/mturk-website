@@ -1,10 +1,12 @@
-import React, { Component } from "react";
+/**
+ * @file Manages the rendering of each component on web app
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
 
+import React, { Component } from "react";
 import ListHits from "../viewHits";
 import S3upload from "../uploads3";
-
 import AddHit from "../addHitCSV"
-
 import mturk from "../mturk";
 import Manage from "../managehits";
 
