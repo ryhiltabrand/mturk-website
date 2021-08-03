@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "react-table-6/react-table.css";
 import Button from "react-bootstrap/Button";
-import { Logins2 } from "./login";
+import { Logins } from "./login";
 
 class SignIn extends Component {
   constructor(props) {
@@ -9,7 +9,6 @@ class SignIn extends Component {
     this.state = {
       LogisOpen: false,
     };
-
   }
 
   openLog = () => this.setState({ LogisOpen: true });
@@ -37,10 +36,9 @@ class SignIn extends Component {
         <Button onClick={this.openLog} position= "center">Login/SignOut</Button>
         
         {this.state.LogisOpen ? (
-          <Logins2
+          <Logins
             closeModal={this.closeLog} 
             isOpen={this.state.LogisOpen}
-            changeAuthState={this.props.changeAuthState}
           />
         ) : null}
         </div>
