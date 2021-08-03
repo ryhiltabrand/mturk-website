@@ -1,8 +1,16 @@
+/**
+ * @file Handles the modal pop up for sign in.
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import React, { Component } from "react";
 import "react-table-6/react-table.css";
 import Button from "react-bootstrap/Button";
 import { Logins } from "./login";
 
+/**
+ * @class controls opening and closing modal and rendering it
+ */
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -24,11 +32,6 @@ class SignIn extends Component {
       [name]: value,
     });
   }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-    
-  };
 
   render() {
     return (

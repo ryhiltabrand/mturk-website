@@ -1,3 +1,7 @@
+/**
+ * @file Handles Input and export og login component
+ * @author Ryan Hiltabrand <ryhiltabrand99@gmail.com>
+ */
+
 import "./style.css"
-export {Logins, Logins2} from "./login"
-export {Register} from "./register"
+export {Logins} from "./login"
