@@ -60,8 +60,6 @@ class App extends Component {
               Hits
             </NavLink>
           </li>
-    
-          <SignIn/>
         </ul>
       </nav>
     );
@@ -84,7 +82,7 @@ class App extends Component {
     if (this.state.authStatus === true) {
       return (
         <div className="app">
-          <h1>O.D.U. AWSMTURK DEMO</h1>
+          <div><h1>O.D.U. AWSMTURK DEMO <SignIn /> </h1></div>
           <BrowserRouter forceRefresh={false}>
             <ProtectedRoute />
           </BrowserRouter>
@@ -93,7 +91,7 @@ class App extends Component {
     } else {
       return (
         <div className="app"> 
-          <h1>O.D.U. AWSMTURK DEMO</h1>
+          <h1>O.D.U. AWSMTURK DEMO <SignIn /></h1>
           <BrowserRouter forceRefresh={false}>
             <Main />
           </BrowserRouter>

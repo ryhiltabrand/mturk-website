@@ -7,7 +7,6 @@ import Amplify, { Auth } from "aws-amplify";
 import { Switch, Route, NavLink } from "react-router-dom";
 import awsExports from "../../aws-exports";
 import React, { Component } from "react";
-import SignIn from "./signIn";
 import { Home, Hits } from "../pages/pages";
 
 import {
@@ -95,7 +94,6 @@ const Navigation = () => (
         </NavLink>{" "}
       </li>
 
-      <SignIn />
     </ul>
   </nav>
 );

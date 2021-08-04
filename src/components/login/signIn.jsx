@@ -36,7 +36,7 @@ class SignIn extends Component {
   render() {
     return (
       <div>
-        <Button onClick={this.openLog} position= "center">Login/SignOut</Button>
+        <Button onClick={this.openLog}  active>Login/SignOut</Button>
         
         {this.state.LogisOpen ? (
           <Logins

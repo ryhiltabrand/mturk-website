@@ -14,6 +14,7 @@
     "bootstrap": "^5.0.2",
     "bootstrap-4-react": "0.0.59",
     "container": "0.0.2",
+    "convert-array-to-csv": "^2.0.0",
     "fast-csv": "^4.3.6",
     "papaparse": "^5.3.1",
     "react": "^17.0.2",

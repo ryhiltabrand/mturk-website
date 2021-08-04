@@ -46,6 +46,7 @@ class ListHits extends Component {
       endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
     });
 
+
     const mTurkClient = new AWS.MTurk();
     var params = {
       MaxResults: "100",
@@ -59,6 +60,7 @@ class ListHits extends Component {
         this.setState({ mturkHITs: hits });
       }
     });
+
   }
 
   handleSubmit = (event) => {

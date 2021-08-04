@@ -10,6 +10,7 @@ import "react-table-6/react-table.css";
 import AddAssignments from "./ModalForms/AddAssignments";
 import AddTime from "./ModalForms/AddTime";
 import Button from "react-bootstrap/Button";
+import converter, {convertArrayToCSV } from 'convert-array-to-csv';
 
 class Manage extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class Manage extends Component {
     this.grabAssignment = this.grabAssignment.bind(this);
     this.gethitinfo = this.gethitinfo.bind(this);
     this.dropAssignments = this.dropAssignments.bind(this);
+    this.convertCSV = this.convertCSV.bind(this);
   }
 
   //Opening and closing of modal form states
@@ -69,6 +71,30 @@ class Manage extends Component {
     };
 
     mTurkClient.listHITs(params, (err, data) => {
+      if (err) console.log(err, err.stack);
+      // an error occurred
+      else {
+        const hits = data.HITs;
+        this.setState({ mturkHITs: hits });
+      }
+    });
+  }
+
+  getReviewableMTurkHITs() {
+    AWS.config.update({
+      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+      region: "us-east-1",
+      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com", //set for sandbox, change for production
+    });
+
+    const mTurkClient = new AWS.MTurk();
+    var params = {
+      MaxResults: "100",
+      Status: "Reviewable",
+    };
+
+    mTurkClient.listReviewableHITs(params, (err, data) => {
       if (err) console.log(err, err.stack);
       // an error occurred
       else {
@@ -137,6 +163,7 @@ class Manage extends Component {
         console.warn("Error making the mTurk API call:", err);
       } else {
         // The call was a success
+        
         const assignments = data.Assignments;
         this.setState({ assignmentsForCurrentHIT: assignments });
       }
@@ -278,6 +305,48 @@ class Manage extends Component {
     });
   }
 
+  convertCSV() {
+    let assignments = this.state.assignmentsForCurrentHIT
+    let title = Object.values(this.state.hit['HIT'])[4]
+    var parser = new DOMParser(); 
+    const header = ['AssignmentId', 'WorkerId', 'HITId', 'FileName', 'AssignmentStatus', 'Question1', 'Question2', 'Question3', 'Question4', 'Question5']
+    var data = []
+    for(var i = 0; i<assignments.length; i++){
+      var xmlQuestion = Object.values(assignments[i])[7]
+      var xmlDoc = parser.parseFromString(xmlQuestion, 'text/xml');
+      var answers = xmlDoc.getElementsByTagName('FreeText');
+      var AssignmentId = Object.values(assignments[i])[0]
+      var WorkerId =  Object.values(assignments[i])[1]
+      var HITId = Object.values(assignments[i])[2]
+      var AssignmentStatus = Object.values(assignments[i])[3]
+      var Question1 = answers[0].innerHTML
+      var Question2 = answers[1].innerHTML
+      var Question3 = answers[2].innerHTML
+      var Question4 = answers[3].innerHTML
+      var Question5 = answers[4].innerHTML
+      var AssignmentData = [AssignmentId, WorkerId, HITId, title, AssignmentStatus, Question1, Question2, Question3, Question4, Question5]
+      data.push(AssignmentData)
+    }
+    const csvFromArrayOfArrays = convertArrayToCSV(data, {
+      header,
+      separator: ','
+    });
+
+    this.downloadCSV(csvFromArrayOfArrays, `${title}.csv`, 'text/csv;charset=utf-8;')
+    
+  }
+
+  downloadCSV(content, filename, contentType){
+    var blob = new Blob([content], { type: contentType });
+    var url = URL.createObjectURL(blob);
+
+    // Create a link to download it
+    var pom = document.createElement('a');
+    pom.href = url;
+    pom.setAttribute('download', filename);
+    pom.click();
+  }
+
   render() {
     //Columns for the table for hits
     const reactTableColumns = [
@@ -313,8 +382,7 @@ class Manage extends Component {
             value={original.value}
             onClick={() => this.grabAssignment(original.value)}
           >
-            {" "}
-            Manage{" "}
+            Manage
           </Button>
         ),
       },
@@ -345,17 +413,14 @@ class Manage extends Component {
               value={original.value}
               onClick={() => this.approveAssignment(original.value)}
             >
-              {" "}
-              Accept{" "}
-            </button>
-            &ensp;
+              Accept
+            </button>{" "}
             <button
               value={original.value}
               onClick={() => this.rejectAssignment(original.value)}
             >
-              {" "}
-              Reject{" "}
-            </button>
+              Reject
+            </button>{" "}
           </p>
         ),
       },
@@ -363,48 +428,40 @@ class Manage extends Component {
     if (this.gethitinfo() !== null) {
       return (
         <div>
+          <Button onClick={() => this.getMTurkHITs()}> All Hits </Button>{" "}
+          <Button onClick={() => this.getReviewableMTurkHITs()}>
+            Reviewable Hits
+          </Button>{" "}
           <h1> You have {this.state.mturkHITs.length} HIT(s). </h1>
-
           <ReactTable
             data={this.state.mturkHITs}
             columns={reactTableColumns}
             defaultPageSize={10}
           />
-
           <h1>
             {" "}
             You have {this.state.assignmentsForCurrentHIT.length} Assignments
             for HIT {this.gethitinfo()}.{" "}
           </h1>
-          {
-            <Button
-              //value={this.gethitinfo()}
-              onClick={() => this.dropAssignments()}
-            >
-              Clear Selection
-            </Button>
-          }
-          {
-            <Button
-              value={this.gethitinfo()}
-              onClick={() => this.deleteHit(this.gethitinfo())}
-            >
-              {" "}
-              Delete{" "}
-            </Button>
-          }
-          {
-            <Button
-              value={this.gethitinfo()}
-              onClick={() => this.expireHit(this.gethitinfo())}
-            >
-              {" "}
-              Expire{" "}
-            </Button>
-          }
-
-          <Button onClick={this.openAssign}>Add Assignments</Button>
-
+          <Button
+            //value={this.gethitinfo()}
+            onClick={() => this.dropAssignments()}
+          >
+            Clear Selection
+          </Button>{" "}
+          <Button
+            value={this.gethitinfo()}
+            onClick={() => this.deleteHit(this.gethitinfo())}
+          >
+            Delete
+          </Button>{" "}
+          <Button
+            value={this.gethitinfo()}
+            onClick={() => this.expireHit(this.gethitinfo())}
+          >
+            Expire
+          </Button>{" "}
+          <Button onClick={this.openAssign}>Add Assignments</Button>{" "}
           {this.state.AssignisOpen ? (
             <AddAssignments
               hit={this.gethitinfo()}
@@ -412,9 +469,7 @@ class Manage extends Component {
               isOpen={this.state.AssignisOpen}
             />
           ) : null}
-
           <Button onClick={this.openTime}>Add Time</Button>
-
           {this.state.TimeisOpen ? (
             <AddTime
               hit={this.gethitinfo()}
@@ -422,7 +477,9 @@ class Manage extends Component {
               isOpen={this.state.TimeisOpen}
             />
           ) : null}
-
+          {" "}<Button onClick={() => this.convertCSV()}>
+            Download Results
+          </Button>
           <ReactTable
             data={this.state.assignmentsForCurrentHIT}
             columns={AssignmentTableColumns}
@@ -433,8 +490,11 @@ class Manage extends Component {
     } else {
       return (
         <div>
+          <Button onClick={() => this.getMTurkHITs()}> All Hits </Button>{" "}
+          <Button onClick={() => this.getReviewableMTurkHITs()}>
+            Reviewable Hits
+          </Button>{" "}
           <h1> You have {this.state.mturkHITs.length} HIT(s). </h1>
-
           <ReactTable
             data={this.state.mturkHITs}
             columns={reactTableColumns}

@@ -102,7 +102,7 @@ class AddHit extends Component {
                 <br>
                 
 
-                <label for= 'question3-4'> 3-4. Is this <a id = 'name'></a> labeled correctly?</label><br>
+                <label for= 'question3'> 3. Is this <a id = 'name'></a> labeled correctly?</label><br>
                 <script>
                     function myFunction(){
                         if (document.getElementById("figure").selected){
@@ -115,7 +115,7 @@ class AddHit extends Component {
                         document.getElementById("name").innerHTML = name;
                 }
                 </script>
-                <select name = "question3-4" id = "question3-4" required>
+                <select name = "question3" id = "question3" required>
                 <option disabled selected value>Select an option</option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
@@ -123,12 +123,12 @@ class AddHit extends Component {
                 <br>
                 <br>
 
-                <label for= 'question5'> 5. What are the <b>explicit</b> meta-tags of this current content component </label><br>
+                <label for= 'question4'> 4. What are the <b>explicit</b> meta-tags of this current content component </label><br>
                 <input name = "question5" id = "question5" required></input>
                 <br>
                 <br>
 
-                <label for= 'question6'> 6. What are the <b>implicit</b> meta-tags of this current content component </label><br>
+                <label for= 'question5'> 5. What are the <b>implicit</b> meta-tags of this current content component </label><br>
                 <input name = "question6" id = "question6" required></input>
                 <br>
                 <br>
