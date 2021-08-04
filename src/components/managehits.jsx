@@ -10,7 +10,7 @@ import "react-table-6/react-table.css";
 import AddAssignments from "./ModalForms/AddAssignments";
 import AddTime from "./ModalForms/AddTime";
 import Button from "react-bootstrap/Button";
-import converter, {convertArrayToCSV } from 'convert-array-to-csv';
+import { convertArrayToCSV } from "convert-array-to-csv";
 
 class Manage extends Component {
   constructor(props) {
@@ -20,6 +20,9 @@ class Manage extends Component {
       ID: "",
       hit: {},
       assignmentsForCurrentHIT: [],
+
+      selected: [],
+      selectAll: 0,
 
       AssignisOpen: false,
       TimeisOpen: false,
@@ -33,6 +36,7 @@ class Manage extends Component {
     this.gethitinfo = this.gethitinfo.bind(this);
     this.dropAssignments = this.dropAssignments.bind(this);
     this.convertCSV = this.convertCSV.bind(this);
+    this.toggleRow = this.toggleRow.bind(this);
   }
 
   //Opening and closing of modal form states
@@ -163,7 +167,7 @@ class Manage extends Component {
         console.warn("Error making the mTurk API call:", err);
       } else {
         // The call was a success
-        
+
         const assignments = data.Assignments;
         this.setState({ assignmentsForCurrentHIT: assignments });
       }
@@ -305,48 +309,188 @@ class Manage extends Component {
     });
   }
 
+  toggleRow(hitId) {
+    const newSelected = Object.assign({}, this.state.selected);
+    newSelected[hitId] = !this.state.selected[hitId];
+    this.setState({
+      selected: newSelected,
+      selectAll: 2,
+    });
+  }
+
+  toggleSelectAll() {
+    let newSelected = {};
+
+    if (this.state.selectAll === 0) {
+      this.state.mturkHITs.forEach((x) => {
+        newSelected[x.hitId] = true;
+      });
+    }
+
+    this.setState({
+      selected: newSelected,
+      selectAll: this.state.selectAll === 0 ? 1 : 0,
+    });
+  }
+
   convertCSV() {
-    let assignments = this.state.assignmentsForCurrentHIT
-    let title = Object.values(this.state.hit['HIT'])[4]
-    var parser = new DOMParser(); 
-    const header = ['AssignmentId', 'WorkerId', 'HITId', 'FileName', 'AssignmentStatus', 'Question1', 'Question2', 'Question3', 'Question4', 'Question5']
-    var data = []
-    for(var i = 0; i<assignments.length; i++){
-      var xmlQuestion = Object.values(assignments[i])[7]
-      var xmlDoc = parser.parseFromString(xmlQuestion, 'text/xml');
-      var answers = xmlDoc.getElementsByTagName('FreeText');
-      var AssignmentId = Object.values(assignments[i])[0]
-      var WorkerId =  Object.values(assignments[i])[1]
-      var HITId = Object.values(assignments[i])[2]
-      var AssignmentStatus = Object.values(assignments[i])[3]
-      var Question1 = answers[0].innerHTML
-      var Question2 = answers[1].innerHTML
-      var Question3 = answers[2].innerHTML
-      var Question4 = answers[3].innerHTML
-      var Question5 = answers[4].innerHTML
-      var AssignmentData = [AssignmentId, WorkerId, HITId, title, AssignmentStatus, Question1, Question2, Question3, Question4, Question5]
-      data.push(AssignmentData)
+    let assignments = this.state.assignmentsForCurrentHIT;
+    let title = Object.values(this.state.hit["HIT"])[4];
+    var parser = new DOMParser();
+    const header = [
+      "AssignmentId",
+      "WorkerId",
+      "HITId",
+      "FileName",
+      "AssignmentStatus",
+      "Question1",
+      "Question2",
+      "Question3",
+      "Question4",
+      "Question5",
+    ];
+    var data = [];
+    for (var i = 0; i < assignments.length; i++) {
+      var xmlQuestion = Object.values(assignments[i])[7];
+      var xmlDoc = parser.parseFromString(xmlQuestion, "text/xml");
+      var answers = xmlDoc.getElementsByTagName("FreeText");
+      var AssignmentId = Object.values(assignments[i])[0];
+      var WorkerId = Object.values(assignments[i])[1];
+      var HITId = Object.values(assignments[i])[2];
+      var AssignmentStatus = Object.values(assignments[i])[3];
+      var Question1 = answers[0].innerHTML;
+      var Question2 = answers[1].innerHTML;
+      var Question3 = answers[2].innerHTML;
+      var Question4 = answers[3].innerHTML;
+      var Question5 = answers[4].innerHTML;
+      var AssignmentData = [
+        AssignmentId,
+        WorkerId,
+        HITId,
+        title,
+        AssignmentStatus,
+        Question1,
+        Question2,
+        Question3,
+        Question4,
+        Question5,
+      ];
+      data.push(AssignmentData);
     }
     const csvFromArrayOfArrays = convertArrayToCSV(data, {
       header,
-      separator: ','
+      separator: ",",
     });
 
-    this.downloadCSV(csvFromArrayOfArrays, `${title}.csv`, 'text/csv;charset=utf-8;')
-    
+    this.downloadCSV(
+      csvFromArrayOfArrays,
+      `${title}.csv`,
+      "text/csv;charset=utf-8;"
+    );
   }
 
-  downloadCSV(content, filename, contentType){
+  downloadCSV(content, filename, contentType) {
     var blob = new Blob([content], { type: contentType });
     var url = URL.createObjectURL(blob);
 
     // Create a link to download it
-    var pom = document.createElement('a');
+    var pom = document.createElement("a");
     pom.href = url;
-    pom.setAttribute('download', filename);
+    pom.setAttribute("download", filename);
     pom.click();
   }
 
+  getSelected() {
+    console.log(Object.keys(this.state.selected));
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      console.log(Object.keys(this.state.selected)[i])
+    }
+  }
+  multiDelete() {
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      this.deleteHit(Object.keys(this.state.selected)[i])
+    }
+  }
+  multiExpire() {
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      this.expireHit(Object.keys(this.state.selected)[i])
+    }
+  }
+  /*multiAddAssignments() {
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      this.AddAssignments(Object.keys(this.state.selected)[i])
+    }
+  }
+  multiAddTime() {
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      this.expireHit(Object.keys(this.state.selected)[i])
+    }
+  }
+  multiDownload=() =>{
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      this.grabHit(Object.keys(this.state.selected)[i])
+      this.grabAssignment(Object.keys(this.state.selected)[i])
+      this.multiconvertCSV(Object.keys(this.state.selected)[i])
+
+    }
+  }
+  multiconvertCSV=(currentHit)=> {
+    
+    let assignments = this.state.assignmentsForCurrentHIT;
+    let title = Object.values(this.state.hit["HIT"])[4];
+    var parser = new DOMParser();
+    const header = [
+      "AssignmentId",
+      "WorkerId",
+      "HITId",
+      "FileName",
+      "AssignmentStatus",
+      "Question1",
+      "Question2",
+      "Question3",
+      "Question4",
+      "Question5",
+    ];
+    var data = [];
+    for (var i = 0; i < assignments.length; i++) {
+      var xmlQuestion = Object.values(assignments[i])[7];
+      var xmlDoc = parser.parseFromString(xmlQuestion, "text/xml");
+      var answers = xmlDoc.getElementsByTagName("FreeText");
+      var AssignmentId = Object.values(assignments[i])[0];
+      var WorkerId = Object.values(assignments[i])[1];
+      var HITId = Object.values(assignments[i])[2];
+      var AssignmentStatus = Object.values(assignments[i])[3];
+      var Question1 = answers[0].innerHTML;
+      var Question2 = answers[1].innerHTML;
+      var Question3 = answers[2].innerHTML;
+      var Question4 = answers[3].innerHTML;
+      var Question5 = answers[4].innerHTML;
+      var AssignmentData = [
+        AssignmentId,
+        WorkerId,
+        HITId,
+        title,
+        AssignmentStatus,
+        Question1,
+        Question2,
+        Question3,
+        Question4,
+        Question5,
+      ];
+      data.push(AssignmentData);
+    }
+    const csvFromArrayOfArrays = convertArrayToCSV(data, {
+      header,
+      separator: ",",
+    });
+
+    this.downloadCSV(
+      csvFromArrayOfArrays,
+      `${title}.csv`,
+      "text/csv;charset=utf-8;"
+    );
+  }*/
+  
   render() {
     //Columns for the table for hits
     const reactTableColumns = [
@@ -385,6 +529,36 @@ class Manage extends Component {
             Manage
           </Button>
         ),
+      },
+      {
+        Header: (x) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={this.state.selectAll === 1}
+              ref={(input) => {
+                if (input) {
+                  input.indeterminate = this.state.selectAll === 2;
+                }
+              }}
+              onChange={() => this.toggleSelectAll()}
+            />
+          );
+        },
+        id: "Checkbox",
+        accessor: "",
+        Cell: ({ original }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={this.state.selected[original.HITId] === true}
+              onChange={() => this.toggleRow(original.HITId)}
+              
+            />
+          );
+        },
       },
     ];
 
@@ -425,7 +599,7 @@ class Manage extends Component {
         ),
       },
     ];
-    if (this.gethitinfo() !== null) {
+    if (this.gethitinfo() !== null ) {
       return (
         <div>
           <Button onClick={() => this.getMTurkHITs()}> All Hits </Button>{" "}
@@ -476,10 +650,8 @@ class Manage extends Component {
               closeModal={this.closeTime}
               isOpen={this.state.TimeisOpen}
             />
-          ) : null}
-          {" "}<Button onClick={() => this.convertCSV()}>
-            Download Results
-          </Button>
+          ) : null}{" "}
+          <Button onClick={() => this.convertCSV()}>Download Results</Button>
           <ReactTable
             data={this.state.assignmentsForCurrentHIT}
             columns={AssignmentTableColumns}
@@ -490,6 +662,7 @@ class Manage extends Component {
     } else {
       return (
         <div>
+          
           <Button onClick={() => this.getMTurkHITs()}> All Hits </Button>{" "}
           <Button onClick={() => this.getReviewableMTurkHITs()}>
             Reviewable Hits
@@ -499,7 +672,10 @@ class Manage extends Component {
             data={this.state.mturkHITs}
             columns={reactTableColumns}
             defaultPageSize={10}
-          />
+          /><br/>
+          <Button onClick={() => this.multiDelete()}>Multi Delete</Button>{' '}
+          <Button onClick={() => this.multiExpire()}>Multi Expire</Button>{' '}
+          
         </div>
       );
     }

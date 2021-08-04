@@ -44,10 +44,8 @@ class AccountBalance extends Component {
   render() {
     return (
       <div className="App">
-        <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        </head>
-        <body><b>${this.state.mturkAccountBalance} is available</b></body>
+        
+        <b>${this.state.mturkAccountBalance} is available</b>
       </div>
     );
   }
