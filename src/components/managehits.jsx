@@ -11,6 +11,7 @@ import AddAssignments from "./ModalForms/AddAssignments";
 import AddTime from "./ModalForms/AddTime";
 import Button from "react-bootstrap/Button";
 import { convertArrayToCSV } from "convert-array-to-csv";
+import { Storage } from "aws-amplify"; //aws-amplify@3.0.13
 
 class Manage extends Component {
   constructor(props) {
@@ -35,7 +36,8 @@ class Manage extends Component {
     this.grabAssignment = this.grabAssignment.bind(this);
     this.gethitinfo = this.gethitinfo.bind(this);
     this.dropAssignments = this.dropAssignments.bind(this);
-    this.convertCSV = this.convertCSV.bind(this);
+    this.convertCSVforDownload = this.convertCSVforDownload.bind(this);
+    this.convertCSVforUpload = this.convertCSVforUpload.bind(this);
     this.toggleRow = this.toggleRow.bind(this);
   }
 
@@ -311,7 +313,9 @@ class Manage extends Component {
 
   toggleRow(hitId) {
     const newSelected = Object.assign({}, this.state.selected);
+    console.log(newSelected);
     newSelected[hitId] = !this.state.selected[hitId];
+    console.log(newSelected[hitId]);
     this.setState({
       selected: newSelected,
       selectAll: 2,
@@ -333,7 +337,7 @@ class Manage extends Component {
     });
   }
 
-  convertCSV() {
+  convertCSVforDownload() {
     let assignments = this.state.assignmentsForCurrentHIT;
     let title = Object.values(this.state.hit["HIT"])[4];
     var parser = new DOMParser();
@@ -387,6 +391,62 @@ class Manage extends Component {
       `${title}.csv`,
       "text/csv;charset=utf-8;"
     );
+    
+  }
+  convertCSVforUpload() {
+    let assignments = this.state.assignmentsForCurrentHIT;
+    let title = Object.values(this.state.hit["HIT"])[4];
+    var parser = new DOMParser();
+    const header = [
+      "AssignmentId",
+      "WorkerId",
+      "HITId",
+      "FileName",
+      "AssignmentStatus",
+      "Question1",
+      "Question2",
+      "Question3",
+      "Question4",
+      "Question5",
+    ];
+    var data = [];
+    for (var i = 0; i < assignments.length; i++) {
+      var xmlQuestion = Object.values(assignments[i])[7];
+      var xmlDoc = parser.parseFromString(xmlQuestion, "text/xml");
+      var answers = xmlDoc.getElementsByTagName("FreeText");
+      var AssignmentId = Object.values(assignments[i])[0];
+      var WorkerId = Object.values(assignments[i])[1];
+      var HITId = Object.values(assignments[i])[2];
+      var AssignmentStatus = Object.values(assignments[i])[3];
+      var Question1 = answers[0].innerHTML;
+      var Question2 = answers[1].innerHTML;
+      var Question3 = answers[2].innerHTML;
+      var Question4 = answers[3].innerHTML;
+      var Question5 = answers[4].innerHTML;
+      var AssignmentData = [
+        AssignmentId,
+        WorkerId,
+        HITId,
+        title,
+        AssignmentStatus,
+        Question1,
+        Question2,
+        Question3,
+        Question4,
+        Question5,
+      ];
+      data.push(AssignmentData);
+    }
+    const csvFromArrayOfArrays = convertArrayToCSV(data, {
+      header,
+      separator: ",",
+    });
+
+    
+    this.uploadCSV(
+      `${title}.csv`,
+      csvFromArrayOfArrays
+    )
   }
 
   downloadCSV(content, filename, contentType) {
@@ -400,20 +460,32 @@ class Manage extends Component {
     pom.click();
   }
 
+  uploadCSV = (filename,content) => {
+    
+      Storage.put(filename, content)
+      .then(()=> {
+        console.log("uploaded")
+      })
+      .catch(err => {
+        console.log('error', err)
+      })
+    
+  }
+
   getSelected() {
     console.log(Object.keys(this.state.selected));
-    for (var i=0; i < Object.keys(this.state.selected).length; i++){
-      console.log(Object.keys(this.state.selected)[i])
+    for (var i = 0; i < Object.keys(this.state.selected).length; i++) {
+      console.log(Object.keys(this.state.selected)[i]);
     }
   }
   multiDelete() {
-    for (var i=0; i < Object.keys(this.state.selected).length; i++){
-      this.deleteHit(Object.keys(this.state.selected)[i])
+    for (var i = 0; i < Object.keys(this.state.selected).length; i++) {
+      this.deleteHit(Object.keys(this.state.selected)[i]);
     }
   }
   multiExpire() {
-    for (var i=0; i < Object.keys(this.state.selected).length; i++){
-      this.expireHit(Object.keys(this.state.selected)[i])
+    for (var i = 0; i < Object.keys(this.state.selected).length; i++) {
+      this.expireHit(Object.keys(this.state.selected)[i]);
     }
   }
   /*multiAddAssignments() {
@@ -490,7 +562,7 @@ class Manage extends Component {
       "text/csv;charset=utf-8;"
     );
   }*/
-  
+
   render() {
     //Columns for the table for hits
     const reactTableColumns = [
@@ -553,9 +625,9 @@ class Manage extends Component {
             <input
               type="checkbox"
               className="checkbox"
+              value="1"
               checked={this.state.selected[original.HITId] === true}
               onChange={() => this.toggleRow(original.HITId)}
-              
             />
           );
         },
@@ -599,7 +671,7 @@ class Manage extends Component {
         ),
       },
     ];
-    if (this.gethitinfo() !== null ) {
+    if (this.gethitinfo() !== null) {
       return (
         <div>
           <Button onClick={() => this.getMTurkHITs()}> All Hits </Button>{" "}
@@ -651,7 +723,9 @@ class Manage extends Component {
               isOpen={this.state.TimeisOpen}
             />
           ) : null}{" "}
-          <Button onClick={() => this.convertCSV()}>Download Results</Button>
+          <Button onClick={() => this.convertCSVforDownload()}>Download Results</Button>
+          {" "}
+          <Button onClick={() => this.convertCSVforUpload()}>Upload Results</Button>
           <ReactTable
             data={this.state.assignmentsForCurrentHIT}
             columns={AssignmentTableColumns}
@@ -662,7 +736,6 @@ class Manage extends Component {
     } else {
       return (
         <div>
-          
           <Button onClick={() => this.getMTurkHITs()}> All Hits </Button>{" "}
           <Button onClick={() => this.getReviewableMTurkHITs()}>
             Reviewable Hits
@@ -672,10 +745,11 @@ class Manage extends Component {
             data={this.state.mturkHITs}
             columns={reactTableColumns}
             defaultPageSize={10}
-          /><br/>
-          <Button onClick={() => this.multiDelete()}>Multi Delete</Button>{' '}
-          <Button onClick={() => this.multiExpire()}>Multi Expire</Button>{' '}
-          
+          />
+          <br />
+          <Button onClick={() => this.multiDelete()}>Multi Delete</Button>{" "}
+          <Button onClick={() => this.multiExpire()}>Multi Expire</Button>{" "}
+          {this.getSelected()}
         </div>
       );
     }

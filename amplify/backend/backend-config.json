@@ -8,7 +8,7 @@
     }
   },
   "storage": {
-    "images": {
+    "csvFilesHits": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
     }
