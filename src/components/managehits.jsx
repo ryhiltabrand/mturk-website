@@ -313,13 +313,23 @@ class Manage extends Component {
 
   toggleRow(hitId) {
     const newSelected = Object.assign({}, this.state.selected);
-    console.log(newSelected);
+    //console.log(typeof newSelected);
     newSelected[hitId] = !this.state.selected[hitId];
     console.log(newSelected[hitId]);
-    this.setState({
+    if (newSelected[hitId]===false) {
+      delete newSelected[hitId];
+      console.log(delete newSelected[hitId])
+      this.setState({
+        selected: newSelected,
+        selectAll: 2,
+      });
+    }
+    else {
+      this.setState({
       selected: newSelected,
       selectAll: 2,
-    });
+    });}
+    console.log(newSelected)
   }
 
   toggleSelectAll() {
@@ -327,7 +337,8 @@ class Manage extends Component {
 
     if (this.state.selectAll === 0) {
       this.state.mturkHITs.forEach((x) => {
-        newSelected[x.hitId] = true;
+        newSelected[x.HITId] = true;
+        console.log(newSelected)
       });
     }
 
@@ -625,7 +636,7 @@ class Manage extends Component {
             <input
               type="checkbox"
               className="checkbox"
-              value="1"
+              
               checked={this.state.selected[original.HITId] === true}
               onChange={() => this.toggleRow(original.HITId)}
             />
