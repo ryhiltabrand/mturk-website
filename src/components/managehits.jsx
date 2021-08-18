@@ -39,6 +39,7 @@ class Manage extends Component {
     this.convertCSVforDownload = this.convertCSVforDownload.bind(this);
     this.convertCSVforUpload = this.convertCSVforUpload.bind(this);
     this.toggleRow = this.toggleRow.bind(this);
+    this.multiUpload = this.multiUpload.bind(this);
   }
 
   //Opening and closing of modal form states
@@ -315,7 +316,7 @@ class Manage extends Component {
     const newSelected = Object.assign({}, this.state.selected);
     //console.log(typeof newSelected);
     newSelected[hitId] = !this.state.selected[hitId];
-    console.log(newSelected[hitId]);
+    //console.log(newSelected[hitId]);
     if (newSelected[hitId]===false) {
       delete newSelected[hitId];
       console.log(delete newSelected[hitId])
@@ -329,7 +330,7 @@ class Manage extends Component {
       selected: newSelected,
       selectAll: 2,
     });}
-    console.log(newSelected)
+    //console.log(newSelected)
   }
 
   toggleSelectAll() {
@@ -338,7 +339,7 @@ class Manage extends Component {
     if (this.state.selectAll === 0) {
       this.state.mturkHITs.forEach((x) => {
         newSelected[x.HITId] = true;
-        console.log(newSelected)
+        //console.log(newSelected)
       });
     }
 
@@ -484,7 +485,7 @@ class Manage extends Component {
   }
 
   getSelected() {
-    console.log(Object.keys(this.state.selected));
+    //console.log(Object.keys(this.state.selected));
     for (var i = 0; i < Object.keys(this.state.selected).length; i++) {
       console.log(Object.keys(this.state.selected)[i]);
     }
@@ -499,6 +500,52 @@ class Manage extends Component {
       this.expireHit(Object.keys(this.state.selected)[i]);
     }
   }
+  multiUpload = () => {
+    for (var i=0; i < Object.keys(this.state.selected).length; i++){
+      let currentHit = Object.keys(this.state.selected)[i];
+      this.grabAssignment(Object.keys(this.state.selected)[i])
+      console.log(Object.values(this.state.mturkHITs))
+      AWS.config.update({
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+        region: "us-east-1",
+        endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
+      });
+      const mTurkClient = new AWS.MTurk();
+      var params = {
+        HITId: currentHit,
+      };
+      mTurkClient.getHIT(params, (err, data) => {
+        if (err) console.log(err);
+        else {
+          const currenthit = data;
+          this.setState({ hit: currenthit }, function (){
+            AWS.config.update({
+              accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+              secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+              region: "us-east-1",
+              endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
+            });
+            const mTurkClient = new AWS.MTurk();
+            mTurkClient.listAssignmentsForHIT({ HITId: currentHit }, (err, data) => {
+              if (err) {
+                console.warn("Error making the mTurk API call:", err);
+              } else {
+                // The call was a success
+        
+                const assignments = data.Assignments;
+                this.setState({ assignmentsForCurrentHIT: assignments }, function (){
+                  console.log(this.state.assignmentsForCurrentHIT, this.state.hit)
+                  this.convertCSVforUpload()
+                });
+              }
+            });
+          });
+        }
+      });
+    }
+  }
+
   /*multiAddAssignments() {
     for (var i=0; i < Object.keys(this.state.selected).length; i++){
       this.AddAssignments(Object.keys(this.state.selected)[i])
@@ -760,7 +807,8 @@ class Manage extends Component {
           <br />
           <Button onClick={() => this.multiDelete()}>Multi Delete</Button>{" "}
           <Button onClick={() => this.multiExpire()}>Multi Expire</Button>{" "}
-          {this.getSelected()}
+          <Button onClick={() => this.multiUpload()}>Multi Upload</Button>{" "}
+          {/*this.getSelected()*/}
         </div>
       );
     }
