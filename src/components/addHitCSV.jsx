@@ -75,7 +75,7 @@ class AddHit extends Component {
                 <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
                 <h1>Question for ${fileName} </h1>
                 <b>Figure: </b>
-                <img src="https://figures-odu-examples-6-27-2021.s3.amazonaws.com/${path}/${fileName}" alt="alternatetext">
+                <img src="https://figures-odu-examples-8-27-2021.s3.amazonaws.com/${path}/${fileName}" alt="alternatetext">
                 <p><b>Label: </b>${caption}</p>
                 <p><b>InLine Refrences: </b>${inline_refrence}</p>
 
