@@ -69,8 +69,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com", //set for sandbox, change for production
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
 
     const mTurkClient = new AWS.MTurk();
     var params = {
@@ -92,8 +91,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com", //set for sandbox, change for production
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
 
     const mTurkClient = new AWS.MTurk();
     var params = {
@@ -125,8 +123,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
     const mTurkClient = new AWS.MTurk();
     var params = {
       HITId: hitID,
@@ -162,8 +159,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
     const mTurkClient = new AWS.MTurk();
     mTurkClient.listAssignmentsForHIT({ HITId: hitId }, (err, data) => {
       if (err) {
@@ -208,8 +204,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
 
     const mTurkClient = new AWS.MTurk();
     var params = {
@@ -245,8 +240,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
 
     const mTurkClient = new AWS.MTurk();
 
@@ -271,8 +265,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
 
     const mturk = new AWS.MTurk();
 
@@ -295,8 +288,7 @@ class Manage extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-    });
+      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
 
     const mturk = new AWS.MTurk();
 
@@ -509,8 +501,7 @@ class Manage extends Component {
         accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
         secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
         region: "us-east-1",
-        endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-      });
+        endpoint: "mturk-requester.us-east-1.amazonaws.com"      });
       const mTurkClient = new AWS.MTurk();
       var params = {
         HITId: currentHit,
@@ -524,8 +515,7 @@ class Manage extends Component {
               accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
               secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
               region: "us-east-1",
-              endpoint: "https://mturk-requester-sandbox.us-east-1.amazonaws.com",
-            });
+              endpoint: "mturk-requester.us-east-1.amazonaws.com"            });
             const mTurkClient = new AWS.MTurk();
             mTurkClient.listAssignmentsForHIT({ HITId: currentHit }, (err, data) => {
               if (err) {
