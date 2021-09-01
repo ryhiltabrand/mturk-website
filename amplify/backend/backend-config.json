@@ -1,37 +1,9 @@
 {
   "auth": {
-    "mturk6c701086": {
+    "mturkwebsite2308ddb3": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "mturk6c701086DefineAuthChallenge",
-          "triggerProvider": "Cognito",
-          "attributes": [
-            "Arn",
-            "Name"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "mturk6c701086CreateAuthChallenge",
-          "triggerProvider": "Cognito",
-          "attributes": [
-            "Arn",
-            "Name"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "mturk6c701086VerifyAuthChallengeResponse",
-          "triggerProvider": "Cognito",
-          "attributes": [
-            "Arn",
-            "Name"
-          ]
-        }
-      ],
+      "dependsOn": [],
       "customAuth": false
     },
     "userPoolGroups": {
@@ -40,7 +12,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "mturk6c701086",
+          "resourceName": "mturkwebsite2308ddb3",
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
@@ -49,23 +21,6 @@
           ]
         }
       ]
-    }
-  },
-  "function": {
-    "mturk6c701086DefineAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "mturk6c701086CreateAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "mturk6c701086VerifyAuthChallengeResponse": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   }
 }

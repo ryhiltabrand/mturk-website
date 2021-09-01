@@ -1,37 +1,19 @@
 {
   "staging": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-amplify05dddf7283a14-staging-42305-authRole",
-      "UnauthRoleArn": "arn:aws:iam::141624009358:role/amplify-amplify05dddf7283a14-staging-42305-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::141624009358:role/amplify-amplify05dddf7283a14-staging-42305-authRole",
+      "AuthRoleName": "amplify-amplifyf77a1669cc244-staging-72029-authRole",
+      "UnauthRoleArn": "arn:aws:iam::141624009358:role/amplify-amplifyf77a1669cc244-staging-72029-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::141624009358:role/amplify-amplifyf77a1669cc244-staging-72029-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-amplify05dddf7283a14-staging-42305-deployment",
-      "UnauthRoleName": "amplify-amplify05dddf7283a14-staging-42305-unauthRole",
-      "StackName": "amplify-amplify05dddf7283a14-staging-42305",
-      "StackId": "arn:aws:cloudformation:us-east-1:141624009358:stack/amplify-amplify05dddf7283a14-staging-42305/4dc260b0-0adc-11ec-95d5-0e65b6fb18f9",
-      "AmplifyAppId": "d1yuyq0j8c4uix"
+      "DeploymentBucketName": "amplify-amplifyf77a1669cc244-staging-72029-deployment",
+      "UnauthRoleName": "amplify-amplifyf77a1669cc244-staging-72029-unauthRole",
+      "StackName": "amplify-amplifyf77a1669cc244-staging-72029",
+      "StackId": "arn:aws:cloudformation:us-east-1:141624009358:stack/amplify-amplifyf77a1669cc244-staging-72029/1641d080-0af5-11ec-ac2d-12002b7e66d1",
+      "AmplifyAppId": "d25w5231s61qi0"
     },
     "categories": {
       "auth": {
-        "newAuth": {},
-        "userPoolGroups": {},
-        "mturkwebsite": {},
-        "mturk6c701086": {}
-      },
-      "function": {
-        "mturk6c701086DefineAuthChallenge": {
-          "deploymentBucketName": "amplify-amplify05dddf7283a14-staging-42305-deployment",
-          "s3Key": "amplify-builds/mturk6c701086DefineAuthChallenge-646c2f48447a67776b4c-build.zip"
-        },
-        "mturk6c701086CreateAuthChallenge": {
-          "deploymentBucketName": "amplify-amplify05dddf7283a14-staging-42305-deployment",
-          "s3Key": "amplify-builds/mturk6c701086CreateAuthChallenge-4d336c784a6a76516e47-build.zip"
-        },
-        "mturk6c701086VerifyAuthChallengeResponse": {
-          "RECAPTCHASECRET": "",
-          "deploymentBucketName": "amplify-amplify05dddf7283a14-staging-42305-deployment",
-          "s3Key": "amplify-builds/mturk6c701086VerifyAuthChallengeResponse-4953473846495565724a-build.zip"
-        }
+        "mturkwebsite2308ddb3": {}
       }
     }
   }

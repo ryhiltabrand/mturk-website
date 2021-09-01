@@ -1,23 +1,23 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
-        "authmturk6c701086UserPoolId": {
+        "authmturkwebsite2308ddb3UserPoolId": {
             "Type": "String",
-            "Default": "authmturk6c701086UserPoolId"
+            "Default": "authmturkwebsite2308ddb3UserPoolId"
         },
         
-        "authmturk6c701086IdentityPoolId": {
+        "authmturkwebsite2308ddb3IdentityPoolId": {
             "Type": "String",
-            "Default": "authmturk6c701086IdentityPoolId"
+            "Default": "authmturkwebsite2308ddb3IdentityPoolId"
         },
         
-        "authmturk6c701086AppClientID": {
+        "authmturkwebsite2308ddb3AppClientID": {
             "Type": "String",
-            "Default": "authmturk6c701086AppClientID"
+            "Default": "authmturkwebsite2308ddb3AppClientID"
         },
-        "authmturk6c701086AppClientIDWeb": {
+        "authmturkwebsite2308ddb3AppClientIDWeb": {
             "Type": "String",
-            "Default": "authmturk6c701086AppClientIDWeb"
+            "Default": "authmturkwebsite2308ddb3AppClientIDWeb"
         },
         "AuthRoleArn": {
             "Type": "String"
@@ -55,7 +55,7 @@
               },
               
               "UserPoolId" : {
-                "Ref": "authmturk6c701086UserPoolId"
+                "Ref": "authmturkwebsite2308ddb3UserPoolId"
               }
             }
         },
@@ -68,7 +68,7 @@
                         "",
                         [
                           {
-                            "Ref": "authmturk6c701086UserPoolId"
+                            "Ref": "authmturkwebsite2308ddb3UserPoolId"
                           },
                           "-MturkAdminsGroupRole"
                         ]
@@ -85,7 +85,7 @@
                             },
                             "Action": "sts:AssumeRoleWithWebIdentity",
                             "Condition": {
-                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authmturk6c701086IdentityPoolId"}},
+                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authmturkwebsite2308ddb3IdentityPoolId"}},
                               "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "authenticated"}
                             }
                         }
@@ -111,7 +111,7 @@
                                 "",
                                 [
 
-                                  "mturk6c701086",
+                                  "mturkwebsite2308ddb3",
                                   "-ExecutionRole-",
                                   {
                                     "Ref": "env"
@@ -272,16 +272,16 @@
                     "Ref": "UnauthRoleArn"
                 },
                 "identityPoolId": {
-                    "Ref": "authmturk6c701086IdentityPoolId"
+                    "Ref": "authmturkwebsite2308ddb3IdentityPoolId"
                 },
                 "userPoolId": {
-                    "Ref": "authmturk6c701086UserPoolId"
+                    "Ref": "authmturkwebsite2308ddb3UserPoolId"
                 },
                 "appClientIDWeb": {
-                    "Ref": "authmturk6c701086AppClientIDWeb"
+                    "Ref": "authmturkwebsite2308ddb3AppClientIDWeb"
                 },
                 "appClientID": {
-                    "Ref": "authmturk6c701086AppClientID"
+                    "Ref": "authmturkwebsite2308ddb3AppClientID"
                 },
                 "region": {
                     "Ref": "AWS::Region"

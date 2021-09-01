@@ -9,38 +9,6 @@ Parameters:
     Type: String
 
   
-  
-  
-  functionmturk6c701086DefineAuthChallengeArn:
-    Type: String
-    Default: functionmturk6c701086DefineAuthChallengeArn
-  
-  functionmturk6c701086DefineAuthChallengeName:
-    Type: String
-    Default: functionmturk6c701086DefineAuthChallengeName
-  
-  
-  
-  functionmturk6c701086CreateAuthChallengeArn:
-    Type: String
-    Default: functionmturk6c701086CreateAuthChallengeArn
-  
-  functionmturk6c701086CreateAuthChallengeName:
-    Type: String
-    Default: functionmturk6c701086CreateAuthChallengeName
-  
-  
-  
-  functionmturk6c701086VerifyAuthChallengeResponseArn:
-    Type: String
-    Default: functionmturk6c701086VerifyAuthChallengeResponseArn
-  
-  functionmturk6c701086VerifyAuthChallengeResponseName:
-    Type: String
-    Default: functionmturk6c701086VerifyAuthChallengeResponseName
-  
-  
-  
 
     
   identityPoolName:
@@ -127,10 +95,6 @@ Parameters:
   userpoolClientSetAttributes:
     Type: String
             
-        
-  aliasAttributes:
-    Type: CommaDelimitedList
-      
   sharedId:
     Type: String
   
@@ -149,10 +113,15 @@ Parameters:
     Type: String
   
             
+  triggers:
+    Type: String
+  
+            
         
   userPoolGroupList:
     Type: CommaDelimitedList
       
+            
   serviceName:
     Type: String
   
@@ -160,34 +129,6 @@ Parameters:
   
   usernameCaseSensitive:
     Type: String
-            
-        
-  dependsOn:
-    Type: CommaDelimitedList
-      
-  
-  userPoolGroups:
-    Type: String
-            
-  
-  adminQueries:
-    Type: String
-            
-  
-  thirdPartyAuth:
-    Type: String
-            
-        
-  authProviders:
-    Type: CommaDelimitedList
-      
-  
-  hostedUI:
-    Type: String
-            
-  triggers:
-    Type: String
-  
             
       
   parentStack:
@@ -201,11 +142,10 @@ Parameters:
   permissions:
     Type: CommaDelimitedList
       
-            
-  authTriggerConnections:
-    Type: String
-  
-            
+        
+  dependsOn:
+    Type: CommaDelimitedList
+      
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   
@@ -220,7 +160,7 @@ Resources:
   # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, 'mturk6c701086_sns-role', !Join ['',[ 'sns', '6c701086', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, 'mturkw2308ddb3_sns-role', !Join ['',[ 'sns', '2308ddb3', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -232,10 +172,10 @@ Resources:
               - "sts:AssumeRole"
             Condition:
               StringEquals:
-                sts:ExternalId: mturk6c701086_role_external_id
+                sts:ExternalId: mturkw2308ddb3_role_external_id
       Policies:
         -
-          PolicyName: mturk6c701086-sns-policy
+          PolicyName: mturkw2308ddb3-sns-policy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -286,7 +226,7 @@ Resources:
       SmsAuthenticationMessage: !Ref smsAuthenticationMessage
       SmsConfiguration:
         SnsCallerArn: !GetAtt SNSRole.Arn
-        ExternalId: mturk6c701086_role_external_id
+        ExternalId: mturkw2308ddb3_role_external_id
     
   
   UserPoolClientWeb:
@@ -294,7 +234,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: mturk6c701086_app_clientWeb
+      ClientName: mturkw2308ddb3_app_clientWeb
       
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
@@ -304,7 +244,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: mturk6c701086_app_client
+      ClientName: mturkw2308ddb3_app_client
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -315,7 +255,7 @@ Resources:
   # Created to execute Lambda which gets userpool app client config values
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '6c701086', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '2308ddb3', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -369,7 +309,7 @@ Resources:
   # Marked as depending on UserPoolClientRole for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: mturk6c701086_userpoolclient_lambda_iam_policy
+      PolicyName: mturkw2308ddb3_userpoolclient_lambda_iam_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -386,7 +326,7 @@ Resources:
   # Marked as depending on UserPoolClientLambdaPolicy for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: mturk6c701086_userpoolclient_lambda_log_policy
+      PolicyName: mturkw2308ddb3_userpoolclient_lambda_log_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -426,7 +366,7 @@ Resources:
   # Always created
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'mturk6c701086_identitypool_6c701086', !Join ['',['mturk6c701086_identitypool_6c701086', '__', !Ref env]]]
+      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'mturkwebsite2308ddb3_identitypool_2308ddb3', !Join ['',['mturkwebsite2308ddb3_identitypool_2308ddb3', '__', !Ref env]]]
       
       CognitoIdentityProviders:
         - ClientId:  !Ref UserPoolClient
