@@ -13,8 +13,8 @@ import Manage from "../managehits";
 export function Home() {
   return (
     <div className="home">
-      <h1>Welcome to my demo MTURK website</h1>
-      <p> Work in Progress</p>
+      <h1>Welcome to ODU's CS MTURK website</h1>
+      <p>Navigate to Hits to view available hits and navigate to Mechanical Turk</p>
     </div>
   );
 }

@@ -1,0 +1,9 @@
+{
+    "groupPermissionMap": {
+        "MturkAdmins": [
+            "create/update",
+            "read",
+            "delete"
+        ]
+    }
+}

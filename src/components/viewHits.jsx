@@ -43,8 +43,8 @@ class ListHits extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
-
+      //endpoint: "mturk-requester.us-east-1.amazonaws.com"
+    });
 
     const mTurkClient = new AWS.MTurk();
     var params = {
@@ -59,7 +59,6 @@ class ListHits extends Component {
         this.setState({ mturkHITs: hits });
       }
     });
-
   }
 
   handleSubmit = (event) => {
@@ -76,7 +75,8 @@ class ListHits extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "mturk-requester.us-east-1.amazonaws.com"    });
+      //endpoint: "mturk-requester.us-east-1.amazonaws.com",
+    });
     const mTurkClient = new AWS.MTurk();
     var params = {
       HITId: hitID,
@@ -106,7 +106,7 @@ class ListHits extends Component {
   }
 
   /**
-   * 
+   *
    * @param {string} hitStatus - status of hit
    * @returns html div of true or false
    */

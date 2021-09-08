@@ -71,7 +71,7 @@ class AddHit extends Component {
                 <script type='text/javascript' src='https://s3.amazonaws.com/mturk-public/externalHIT_v1.js'></script>
             </head>
             <body>
-                <form name='mturk_form' method='post' id='mturk_form' action='https://workersandbox.mturk.com/mturk/externalSubmit'>
+                <form name='mturk_form' method='post' id='mturk_form' action='https://www.mturk.com/mturk/externalSubmit'>
                 <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
                 <h1>Question for ${fileName} </h1>
                 <b>Figure: </b>

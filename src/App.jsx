@@ -6,7 +6,7 @@ import ProtectedRoute from "./components/login/protectedRoute";
 import { Home, Hits } from "./components/pages/pages";
 import SignIn from "./components/login/signIn";
 
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+//import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 
 class App extends Component {
   
@@ -103,5 +103,5 @@ class App extends Component {
   }
 }
 
-//export default App;
-export default withAuthenticator(App);
+export default App;
+//export default withAuthenticator(App);

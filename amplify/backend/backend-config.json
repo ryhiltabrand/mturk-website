@@ -22,5 +22,27 @@
         }
       ]
     }
+  },
+  "storage": {
+    "csvresults": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "mturkwebsite2308ddb3",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "userPoolGroups",
+          "attributes": [
+            "MturkAdminsGroupRole"
+          ]
+        }
+      ]
+    }
   }
 }
