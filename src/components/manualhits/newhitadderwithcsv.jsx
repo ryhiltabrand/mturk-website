@@ -48,7 +48,7 @@ function CreateHit(
                 <script type='text/javascript' src='https://s3.amazonaws.com/mturk-public/externalHIT_v1.js'></script>
             </head>
             <body>
-                <form name='mturk_form' method='post' id='mturk_form' action='https://workersandbox.mturk.com/mturk/externalSubmit'>
+                <form name='mturk_form' method='post' id='mturk_form' action='https://worker.mturk.com/mturk/externalSubmit'>
                 <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
                 <h1>Question for ${fileName} </h1>
                 <b>Figure: </b>
@@ -152,7 +152,7 @@ function CreateHit(
     } else {
       // Save the HITId printed by data.HIT.HITId and use it in the RetrieveAndApproveResults.js code sample
       console.log(
-        "HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=" +
+        "HIT has been successfully published here: https://worker.mturk.com/mturk/preview?groupId=" +
           data.HIT.HITTypeId +
           " with this HITId: " +
           data.HIT.HITId

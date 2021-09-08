@@ -620,7 +620,7 @@ class Manage extends Component {
         Cell: (props) => (
           <a
             href={
-              "https://workersandbox.mturk.com/projects/" +
+              "https://worker.mturk.com/projects/" +
               props.value +
               "/tasks"
             }

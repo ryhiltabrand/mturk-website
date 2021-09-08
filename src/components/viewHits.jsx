@@ -101,7 +101,7 @@ class ListHits extends Component {
       document.getElementById("output").innerHTML = newarr[6];
       document.getElementById(
         "output1"
-      ).innerHTML = `<a href='https://workersandbox.mturk.com/projects/${newarr[2]}/tasks' target="_"><input type="button" value="ACCEPT"/></a>`;
+      ).innerHTML = `<a href='https://worker.mturk.com/projects/${newarr[2]}/tasks' target="_"><input type="button" value="ACCEPT"/></a>`;
     }
   }
 
@@ -128,7 +128,7 @@ class ListHits extends Component {
         Cell: (props) => (
           <a
             href={
-              "https://workersandbox.mturk.com/projects/" +
+              "https://worker.mturk.com/projects/" +
               props.value +
               "/tasks"
             }

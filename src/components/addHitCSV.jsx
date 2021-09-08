@@ -174,7 +174,7 @@ class AddHit extends Component {
                 alert(err.message);
             } else {
                 // Save the HITId printed by data.HIT.HITId and use it in the RetrieveAndApproveResults.js code sample
-                console.log('HIT has been successfully published here: https://workersandbox.mturk.com/mturk/preview?groupId=' + data.HIT.HITTypeId + ' with this HITId: ' + data.HIT.HITId);
+                console.log('HIT has been successfully published here: https://worker.mturk.com/mturk/preview?groupId=' + data.HIT.HITTypeId + ' with this HITId: ' + data.HIT.HITId);
             }
           })
     }
