@@ -24,7 +24,7 @@ class AccountBalance extends Component {
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
       region: "us-east-1",
-      endpoint: "mturk-requester.us-east-1.amazonaws.com"
+      //endpoint: "mturk-requester.us-east-1.amazonaws.com"
     });
     
     const mTurkClient = new AWS.MTurk();
